@@ -1,0 +1,46 @@
+class Solution {
+    public int strStr(String s, String pattern) {
+        if(s.equals(pattern))return 0;
+        if(pattern.length()==0)return 0;
+        if(pattern.length()>s.length())return -1;
+        int prefix[]=getprefix(pattern);
+        int index=0;
+        int i=0;
+        int res=-1;
+        while(i<s.length()){
+            if(s.charAt(i)==pattern.charAt(index)){
+                i++;index++;
+                if(index==pattern.length()){
+                    res=i-pattern.length();
+                    break;
+                }
+            }else{
+                if(index==0){
+                    i++;
+                }else{
+                    index=prefix[index-1];
+                }
+            }
+        }
+        return res;
+    }
+    
+    public int[] getprefix(String pattern){
+        int pre[]=new int[pattern.length()];
+        int left=0;int right=1;
+        while(right<pattern.length()){
+            if(pattern.charAt(right)==pattern.charAt(left)){
+                pre[right]=left+1;
+                left++;
+                right++;
+            }else{
+                if(left==0){
+                    right++;
+                }else{
+                    left=pre[left-1]; //to see how many match prefix
+                }
+            }
+        }
+        return pre;
+    }
+}

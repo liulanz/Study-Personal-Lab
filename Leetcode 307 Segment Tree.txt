@@ -1,0 +1,119 @@
+class TreeNode{
+    int start;
+    int end;
+    int sum;
+    int mid;
+    TreeNode left=null;
+    TreeNode right=null;
+    public TreeNode(int start,int end,int sum,int mid){
+        this.start=start;
+        this.end=end;
+        this.sum=sum;
+        this.mid=mid;
+    }
+    
+    public String toString(){
+        return start+"  "+end+"  "+sum;
+    }
+}
+
+class NumArray {
+
+    int sums[];
+    int nums[];
+    TreeNode Root;
+    public NumArray(int[] nums) {
+        this.nums=nums;
+        int sum=0;
+        sums=new int[this.nums.length];
+        for(int i=0;i<nums.length;i++){
+            sum+=nums[i];
+            sums[i]=sum;
+        }
+        //construct the tree
+        Root=construct(0,nums.length-1);//only call once, at the beginning
+    }
+    public void print(TreeNode root){
+        Queue<TreeNode>queue=new LinkedList<>();
+        queue.add(root);
+        while(queue.size()!=0){
+            TreeNode parent=queue.poll();
+            if(parent.left!=null){
+                queue.add(parent.left);
+            }
+            if(parent.right!=null){
+                queue.add(parent.right);
+            }
+        }
+    }
+    
+    
+    private TreeNode construct(int start,int end){
+        if(start==end){
+            TreeNode r=new TreeNode(start,end,nums[start],start);
+            return r;
+        } 
+        if(start<end){
+            int sum=0;
+            if(start-1<0){
+                sum=sums[end];
+            }else{
+                sum=sums[end]-sums[start-1];
+            }
+            int mid=(start+end)/2;
+            TreeNode r=new TreeNode(start,end,sum,mid);
+            r.left=construct(start,mid);
+            r.right=construct(mid+1,end);
+            return r;
+        }
+        return null;
+    }
+    
+    public void update(int i, int val) {
+        int diff=val-nums[i];
+        nums[i]=val;
+        update(this.Root,i,diff);
+    }
+    
+    private void update(TreeNode root,int index,int diff){
+        if(root==null){
+            return;
+        }
+        int mid=root.mid;
+        if(index>=root.start&&index<=root.end){
+            root.sum+=diff;
+        }
+        if(index<=mid){
+            update(root.left,index,diff);
+        }
+        else{
+            update(root.right,index,diff);
+        } 
+    }
+    
+    public int sumRange(int i, int j) {
+        return find(this.Root,i,j);
+    }
+    
+    private int find(TreeNode root,int start,int end){
+        if(root==null){
+            return -1;
+        }
+        if(root.start==start&&root.end==end){
+            return root.sum;
+        }
+        int mid=root.mid;
+        if(end<=mid){//completely left
+            return find(root.left,start,end);
+        }
+        if(start>mid){//completely right
+            return find(root.right,start,end);
+        }
+        if(start<=mid&&end>mid){//both side
+            return find(root.left,start,mid)+find(root.right,mid+1,end);
+        }
+        return 0;
+        
+    }
+    
+}

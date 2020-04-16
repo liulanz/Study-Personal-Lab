@@ -1,0 +1,96 @@
+class Solution {
+    int graph[][];
+    Wrapper dp[][];
+    String A[];
+    int target=0;
+    public String shortestSuperstring(String[] A) {
+        if(A.length==1)return A[0];
+        StringBuilder res=new StringBuilder();
+        this.A=A;
+        int min=Integer.MAX_VALUE;
+        LinkedList<Integer>per=new LinkedList<>();
+        int len=A.length;
+        dp=new Wrapper[len][1<<len];
+        graph=new int[len][len];
+        for(int i=0;i<len;i++){
+            for(int j=0;j<len;j++){
+                if(i==j)continue;
+                graph[i][j]=overlap(A[i],A[j]);
+            }
+        }
+        for(int i=0;i<len;i++)target=target|(1<<i);
+        for(int i=0;i<len;i++){
+            int mask=1<<i;
+            int nextpath=target^mask;
+            Wrapper w=dfs(i,nextpath);
+            if(min>w.cost){
+                min=w.cost;
+                per=w.permutation;
+            }
+        }
+        res.append(A[per.get(0)]);
+        for(int i=1;i<per.size();i++){
+            int pre=per.get(i-1);
+            int cur=per.get(i);
+            res.append(A[cur].substring(A[cur].length()-graph[pre][cur]));
+        }
+        return res.toString();
+    }
+    public Wrapper dfs(int root,int path){//root is the current node, use bit to represent the path
+        if(Integer.bitCount(path)==1){//only 1 node remain
+            int pos=0;
+            for(int i=0;i<32;i++){
+                int bit=path&1;path=path>>1;
+                if(bit==1){
+                    pos=i;//which node is the last node
+                    break;
+                }
+            }
+            Wrapper w=new Wrapper();
+            w.permutation.addFirst(pos);
+            w.permutation.addFirst(root);
+            w.start=root;
+            w.cost=A[root].length()+graph[root][pos];
+            dp[root][path]=w;
+            return w;
+        }
+        if(dp[root][path]!=null)return dp[root][path];//return a Wrapper
+        Wrapper w=new Wrapper();
+        Wrapper minwrap=new Wrapper();
+        int min=Integer.MAX_VALUE;
+        w.start=root;
+        int copypath=path;
+        List<Integer>list=new ArrayList<>();
+        for(int i=0;i<32;i++){//find all 1 bit
+            int bit=copypath&1;copypath=copypath>>1;
+            if(bit==1)list.add(i);
+        }
+        for(int k:list){
+            //turn off kth bit
+            int nextpath=0;
+            int mask=1<<k;
+            nextpath=mask^path;
+            Wrapper nextwrap=dfs(k,nextpath);
+            if(min>nextwrap.cost+A[root].length()-(A[k].length()-graph[root][k])){
+                min=nextwrap.cost+A[root].length()-(A[k].length()-graph[root][k]);
+                minwrap=nextwrap;
+            }
+        }
+        w.cost=min;
+        w.permutation=new LinkedList<>(minwrap.permutation);
+        w.permutation.addFirst(root);
+        dp[root][path]=w;
+        return w;
+    }
+    public int overlap(String a, String b) {
+        for (int i=1; i<a.length();i++) {
+            if (b.startsWith(a.substring(i)))return b.length()-a.length()+i;
+        }
+        return b.length();
+    }
+    class Wrapper{
+        LinkedList<Integer>permutation=new LinkedList<>();
+        int start=0;
+        int cost=0;
+    }
+}
