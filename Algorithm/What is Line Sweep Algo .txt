@@ -1,0 +1,3 @@
+Def: Many geometric problems can be solved using sweep line algorithms. The idea
+in such algorithms is to represent an instance of the problem as a set of events
+that correspond to points in the plane.
