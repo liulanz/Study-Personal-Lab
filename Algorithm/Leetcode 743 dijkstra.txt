@@ -1,0 +1,39 @@
+class Solution {
+    ArrayList<Integer>adjecentlist[];
+    int cost[][];
+    int dis[];
+    public int networkDelayTime(int[][] times, int N, int K) {
+        int res=0;
+        adjecentlist=new ArrayList[N+1];
+        for(int i=0;i<adjecentlist.length;i++)adjecentlist[i]=new ArrayList<>();
+        cost=new int[N+1][N+1];
+        dis=new int[N+1];
+        for(int i=0;i<dis.length;i++)dis[i]=Integer.MAX_VALUE;
+        dis[K]=0;
+        for(int i=0;i<times.length;i++){
+            int v1=times[i][0];
+            int v2=times[i][1];
+            int w=times[i][2];
+            adjecentlist[v1].add(v2);
+            cost[v1][v2]=w;
+        }
+        Queue<Integer>queue=new LinkedList<>();
+        queue.add(K);
+        while(queue.size()!=0){
+            int parent=queue.poll();
+            List<Integer>childs=adjecentlist[parent];
+            for(int child:childs){
+                if(dis[child]>dis[parent]+cost[parent][child]){
+                    dis[child]=dis[parent]+cost[parent][child];
+                    queue.add(child);
+                }
+            }
+        }
+        for(int i=1;i<dis.length;i++){
+            int n=dis[i];
+            res=Math.max(n,res);
+        }
+        if(res==Integer.MAX_VALUE)return -1;
+        return res;
+    }
+}
