@@ -1,0 +1,4 @@
+A simple way to detect the cycle is to walk in the graph and keep track of all
+nodes that have been visited. Once a node is visited for the second time, we can
+conclude that the node is the first node in the cycle. This method works in O(n)
+time and also uses O(n) memory
