@@ -1,0 +1,15 @@
+A graph is strongly connected if there is a path from any node to all other
+nodes in the graph. 
+
+
+The strongly connected components of a graph divide the graph into
+strongly connected parts that are as large as possible.
+
+
+
+
+Kosaraju’s algorithm1
+is an efficient method for finding the strongly connected
+components of a directed graph. The algorithm performs two depth-first searches:
+the first search constructs a list of nodes according to the structure of the graph,
+and the second search forms the strongly connected components
