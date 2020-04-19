@@ -1,0 +1,23 @@
+public String getHappyString(int n, int k) {
+  // initialization
+  char[] alphabet = new char[]{'a', 'b', 'c'};
+  int base = 1 << (n - 1);
+  StringBuilder b = new StringBuilder("");
+
+  // processing
+  while (base > 0) {
+	  char prev = (b.length() == 0 ? 'x' : b.charAt(b.length() - 1));
+	  int accum = base;
+	  for (char c : alphabet) {
+		if (c == prev) continue;
+		if (accum >= k) {
+			b.append(c); 
+			k -= (accum - base);
+			break;
+		}
+		accum += base;
+	  }
+	  base /= 2;
+  }
+  return b.toString();
+}
