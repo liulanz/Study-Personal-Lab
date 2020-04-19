@@ -1,0 +1,53 @@
+An Eulerian path is a path that goes through each edge exactly once.
+An Eulerian circuit is an Eulerian path that starts and ends at the same node.
+
+
+A Hamiltonian path is a path that visits each node exactly once
+A Hamiltonian Circuit is a path that visits each node exactly once and end at the begin node
+
+
+Existence of Eulerian paths(Undirected-Graph)
+	1. the degree of each node is even or
+	2. the degree of exactly two nodes is odd, and the degree of all other nodes is even.
+
+
+Existence of Eulerian paths(Directed-Graph)
+	1. in each node, the indegree equals the outdegree
+	2. in one node, the indegree is one larger than the outdegree, in another node, the outdegree is one 	  larger than the indegree, and in all other nodes, the indegree equals the outdegree.
+
+Hierholzer’s algorithm is an efficient method for constructing an Eulerian circuit.
+
+
+
+
+
+
+
+
+
+Existence of Hamlton Path
+
+	*No efficient method is known for testing if a graph contains a Hamiltonian path,
+	and the problem is NP-hard. Still, in some special cases, we can be certain that a
+	graph contains a Hamiltonian path
+
+	1.Dirac’s theorem: If the degree of each node is at least n/2, the graph contains a Hamiltonian 	  path.
+	2.Ore’s theorem: If the sum of degrees of each non-adjacent pair of nodes is
+	  at least n, the graph contains a Hamiltonian path.
+
+
+
+
+
+A knight’s tour is a sequence of moves of a knight on an n × n chessboard
+following the rules of chess such that the knight visits each square exactly once.
+
+A knight’s tour corresponds to a Hamiltonian path in a graph whose nodes
+represent the squares of the board, and two nodes are connected with an edge if
+a knight can move between the squares according to the rules of chess.
+
+
+Warnsdorf’s rule is a simple and effective heuristic for finding a knight’s tour3.
+Using the rule, it is possible to efficiently construct a tour even on a large board.
+The idea is to always move the knight so that it ends up in a square where the
+number of possible moves is as small as possible.
