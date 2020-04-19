@@ -1,0 +1,40 @@
+public class Solution {
+    /**
+     * @param intervals: the intervals
+     * @param rooms: the sum of rooms
+     * @param ask: the ask
+     * @return: true or false of each meeting
+     */
+    public boolean[] meetingRoomIII(int[][] intervals, int rooms, int[][] ask) {
+        // Write your code here.
+        boolean res[]=new boolean[ask.length];
+        TreeMap<Integer,Integer>treemap=new TreeMap<>();
+        int max=0;
+        for(int pair[]:intervals)max=Math.max(max,pair[1]);
+        int nums[]=new int[max+2];
+        int sums[]=new int[max+2];
+        int sum=0;
+        for(int pair[]:intervals){
+            nums[pair[0]]++;
+            nums[pair[1]]--;
+        }
+        for(int i=0;i<sums.length;i++){
+            sum+=nums[i];
+            sums[i]=sum;
+        }
+        for(int i=0;i<sums.length;i++){
+            if(sums[i]==rooms)treemap.put(i,1);
+        }
+        for(int i=0;i<ask.length;i++){
+            boolean check=true;
+            int s=ask[i][0];
+            int e=ask[i][1]-1;
+            Integer cell=treemap.ceilingKey(s);
+            Integer floor=treemap.floorKey(e);
+            if(cell!=null&&cell<=e)check=false;
+            if(floor!=null&&floor>=s)check=false;
+            res[i]=check;
+        }
+        return res;
+    }
+}
