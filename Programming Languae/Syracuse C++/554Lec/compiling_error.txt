@@ -1,0 +1,21 @@
+C:\Users\zinan\Desktop\554Lec\2019_04_09_Lecture_thread_PutGet_SleepFor_Chrono.cpp: In function 'int main()':
+C:\Users\zinan\Desktop\554Lec\2019_04_09_Lecture_thread_PutGet_SleepFor_Chrono.cpp:81:28: error: no matching function for call to 'std::thread::thread(<unresolved overloaded function type>, int&)'
+   getter[i] = thread(get, i);
+                            ^
+In file included from C:\Users\zinan\Desktop\554Lec\2019_04_09_Lecture_thread_PutGet_SleepFor_Chrono.cpp:3:0:
+C:/Program Files/Haskell Platform/8.2.2/mingw/include/c++/6.2.0/thread:128:7: note: candidate: template<class _Callable, class ... _Args> std::thread::thread(_Callable&&, _Args&& ...)
+       thread(_Callable&& __f, _Args&&... __args)
+       ^~~~~~
+C:/Program Files/Haskell Platform/8.2.2/mingw/include/c++/6.2.0/thread:128:7: note:   template argument deduction/substitution failed:
+C:\Users\zinan\Desktop\554Lec\2019_04_09_Lecture_thread_PutGet_SleepFor_Chrono.cpp:81:28: note:   couldn't deduce template parameter '_Callable'
+   getter[i] = thread(get, i);
+                            ^
+In file included from C:\Users\zinan\Desktop\554Lec\2019_04_09_Lecture_thread_PutGet_SleepFor_Chrono.cpp:3:0:
+C:/Program Files/Haskell Platform/8.2.2/mingw/include/c++/6.2.0/thread:123:5: note: candidate: std::thread::thread(std::thread&&)
+     thread(thread&& __t) noexcept
+     ^~~~~~
+C:/Program Files/Haskell Platform/8.2.2/mingw/include/c++/6.2.0/thread:123:5: note:   candidate expects 1 argument, 2 provided
+C:/Program Files/Haskell Platform/8.2.2/mingw/include/c++/6.2.0/thread:117:5: note: candidate: std::thread::thread()
+     thread() noexcept = default;
+     ^~~~~~
+C:/Program Files/Haskell Platform/8.2.2/mingw/include/c++/6.2.0/thread:117:5: note:   candidate expects 0 arguments, 2 provided

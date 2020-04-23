@@ -1,0 +1,30 @@
+//HW6 Threaded MergeSort
+//Due:  Friday (11/23) at 11:59PM
+//You need to create 4 new threads to perform merge_sort
+//There will be totally 5 thread (4 + main thread).
+//Your implementation is not required to be in-place implementation.
+
+//Total Points: 30
+
+#include <iostream>
+#include <vector>
+using namespace std;
+
+void merge_sort(vector<int> &V, int i, int j); //sort elements of vector V from position i to position j
+void merge(vector<int> &V, int i1, int i2, int j1, int j2); //Merge vector elments from position i1 to position i2 with vector elements
+                                                            //from position j1 to position j2.
+							    //Note that elements from i1 to i2 are already sorted, and elements from j1 to j2 are
+							    //also sorted already.
+
+
+
+int main() {
+	int n = 100000;
+	vector<int> V(n);//V has n elements.
+	for (int i = 0; i < 100000; i++) V[i] = rand() % 5000;
+	//You need to crate four threads to perform sorting
+	//You need to then save the sorted result to output.txt
+
+}
+
+

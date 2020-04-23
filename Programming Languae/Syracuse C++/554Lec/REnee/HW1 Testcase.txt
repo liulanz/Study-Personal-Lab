@@ -1,0 +1,45 @@
+int main() {
+	doubly_linked_list d1;
+	d1.make_random_list(30, 10);
+	d1.print_forward();
+	d1.print_backward();
+
+	d1.reverse();
+	d1.print_forward();
+	d1.print_backward();
+
+	d1.remove_one(7);
+	d1.remove_one(8);
+	d1.print_forward();
+	d1.print_backward();
+
+	d1.remove_all(5);
+	d1.print_forward();
+	d1.print_backward();
+
+	d1.sort();
+	d1.print_forward();
+	d1.print_backward();
+
+	d1.insert(4);
+	d1.insert(9);
+	d1.insert(0);
+	d1.print_forward();
+	d1.print_backward();
+
+	cout << endl<<"\n//--------------------------------------" << endl;
+	d1.remove_all(0);
+	d1.print_forward();
+	d1.print_backward();
+	d1.remove_all(9);
+	d1.print_forward();
+	d1.print_backward();
+	cout << endl << endl;
+	if (d1.head->previous == nullptr) { cout << "head->previous == nullptr" << endl; }
+	else { cout << "XXX head->previous != nullptr" << endl; }	
+	if (d1.tail->next == nullptr) { cout << "tail->next == nullptr" << endl; }
+	else { cout << "XXX tail->next != nullptr" << endl; }
+
+	system("pause");
+	return 0;
+}
