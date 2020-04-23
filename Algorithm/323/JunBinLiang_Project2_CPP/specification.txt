@@ -1,0 +1,43 @@
+Name of your class : CSC323-36		Programing Language : C++
+Project#:2				Name of the Project : HuffmanLL
+Name: JunBin,Liang
+Due date: soft copy:9/9/2019 Monday before midnight
+	  Hard copy: 9/12/2018 Thursday in class
+
+
+Algorithm steps of your program :
+  main():
+	Step 1: listHead <- get a newNode as the dummy listNode with (“dummy” ,0, null), listHead to point to.
+	Step 2: inFile <-open input file using argv
+		outFIle <- open ouput file using argv
+	Step 3: chr<- get from inFile
+		Prob <- get from inFile
+		newNode <- get a new listNode (chr, Prob, null)
+	Step 4: insertNewNode (listHead, newNode) 
+	Step 5: printList (listHead) 
+	Step 6: repeat step 3 – step 5 until the end of inFile .
+	Step 7: close all files.
+	
+  
+ insertNewNode (listHead, newNode):
+	Step 1: spot<-findSpot(listHead, newNode)
+	Step 2: newNode.next<-spot.next
+	Step 3: spot.next<-newNode
+
+
+ findSpot(listHead, newNode):
+	Step 0 : spot<-listHead
+	Step 1 : Walking and continue
+		 if(spot.next!=null and spot.next.count<newNode.count) spot<-spot.next
+
+	Step 2 : repeat Step1 until the loop end
+	Step 3 : return spot
+
+ printList (listHead) :
+	Step 0 : spot<-listHead.next
+	Step 1 : walking and continue
+	           if(spot!=null) write the Spot content(char and probability to the ouput file)
+	Step 2 : repeat Step1 until the loop end
+	
+ 	
+
