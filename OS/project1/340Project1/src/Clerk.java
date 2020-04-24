@@ -4,8 +4,8 @@ public class Clerk implements Runnable {
 	int id=-1;
 	int toProcess=0;
 	Set<Integer>seatset=new HashSet<>();
-	volatile List<Integer>seats=new ArrayList<>();
-	static Queue<Passenger>queue=new LinkedList<>();
+	List<Integer>seats=new ArrayList<>();
+	volatile static Queue<Passenger>queue=new LinkedList<>();
 	volatile static int flag=1;
 	volatile static Set<Integer>finish=new HashSet<>();
 	public Clerk(int id,int toProcess) {
@@ -42,11 +42,15 @@ public class Clerk implements Runnable {
 				Clerk.finish.add(cur.id);
 			}
 		}
-		System.out.println("Clerk "+this.id+"  finish its job"+"  ");
+		msg(("Clerk "+this.id+"  finish its job"+"  "));
 		return;
 	}
 	
-	  Passenger get() {
+	public void msg(String m) {
+		 System.out.println("["+(System.currentTimeMillis()-Main.time)+"] "+": "+m);
+	}
+	
+	private Passenger get() {
 		if(Clerk.queue.size()!=0) {
 			Passenger p=Clerk.queue.poll();
 			return p;
