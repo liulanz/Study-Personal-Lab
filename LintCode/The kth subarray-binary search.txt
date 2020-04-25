@@ -1,0 +1,42 @@
+public class Solution {
+    /**
+     * @param a: an array
+     * @param k: the kth
+     * @return: return the kth subarray
+     */
+    public long thekthSubarray(int[] A, long k) {
+        // wrrite your code here
+        long sum=0;
+        for(int n:A)sum+=n;
+        long left=0;long right=sum;
+        long res=-1;
+        while(left<=right){
+            long mid=left+(right-left)/2;
+            long cnt=get(A,mid);
+            if(cnt>=k){
+                res=mid;
+                right=mid-1;
+            }else{
+                left=mid+1;
+            }
+        }
+        return res;
+    }
+    
+    public long get(int A[],long t){
+        long cnt=0;
+        long sum=0;
+        int size=0;
+        for(int i=0;i<A.length;i++){
+            size++;
+            sum+=A[i];
+            while(size!=0&&sum>t){
+                int front=i-size+1;
+                sum-=A[front];
+                size--;
+            }
+            cnt+=(size);
+        }
+        return cnt;
+    }
+}
