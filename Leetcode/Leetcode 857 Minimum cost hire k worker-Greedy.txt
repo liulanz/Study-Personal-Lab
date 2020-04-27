@@ -1,0 +1,42 @@
+class Solution {
+    public double mincostToHireWorkers(int[] quality, int[] wage, int K) {
+        double res=Integer.MAX_VALUE;
+        List<People>list=new ArrayList<>();
+        for(int i=0;i<quality.length;i++){
+            People p=new People(quality[i],wage[i]);
+            list.add(p);
+        }
+        Collections.sort(list,(p1,p2)->{
+            return Double.compare(p1.ratio,p2.ratio);
+        });
+        PriorityQueue<Double>pq=new PriorityQueue<>((n1,n2)->{
+            return Double.compare(n2,n1);
+        });
+        double sum=0;
+        for(int i=0;i<list.size();i++){
+            People p=list.get(i);
+            sum+=p.q;
+            pq.add(p.q);
+            if(pq.size()==K){
+                res=Math.min(res,sum*p.ratio);
+                sum-=pq.poll();
+            }
+        }
+        return res;
+    }
+    
+    class People{
+        double q;
+        double w;
+        double ratio;
+        public People(double q,double w){
+            this.q=q;
+            this.w=w;
+            this.ratio=w/q;
+        }
+        
+        public String toString(){
+            return "["+q+", "+w+", "+ratio+" ]\n";
+        }
+    }
+}
