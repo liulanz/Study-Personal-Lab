@@ -1,0 +1,52 @@
+/**
+ * Definition of TreeNode:
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left, right;
+ *     public TreeNode(int val) {
+ *         this.val = val;
+ *         this.left = this.right = null;
+ *     }
+ * }
+ */
+
+public class Solution {
+    /**
+     * @param root: The root of binary tree.
+     * @return: True if the binary tree is BST, or false
+     */
+     boolean ans=true;
+    public boolean isValidBST(TreeNode root) {
+        // write your code here
+        dfs(root);
+        return ans;
+    }
+    
+    public int[] dfs(TreeNode root){//[min, max]
+        if(root==null)return null;
+        int left[]=dfs(root.left);
+        int right[]=dfs(root.right);
+        if(left==null&&right==null)return new int[]{root.val,root.val};
+        int res[]=new int[2];
+        if(left==null){
+            int min=right[0];
+            if(min<=root.val)ans=false;
+            res[0]=Math.min(root.val,min);
+            res[1]=Math.max(root.val,right[1]);
+        }
+        else if(right==null){
+            int max=left[1];
+            if(max>=root.val)ans=false;
+            res[0]=Math.min(root.val,left[0]);
+            res[1]=Math.max(root.val,max);
+        }
+        else{
+            int max=left[1];
+            int min=right[0];
+            if(min<=root.val||max>=root.val)ans=false;
+            res[0]=Math.min(root.val,Math.min(left[0],right[0]));
+            res[1]=Math.max(root.val,Math.max(left[1],right[1]));
+        }
+        return res;
+    }
+}
