@@ -1,0 +1,79 @@
+class Solution {
+    int A[];
+    long lower;long upper;
+    public int countRangeSum(int[] A, int lower, int upper) {
+        if(A.length==0)return 0;
+        this.lower=lower;this.upper=upper;
+        this.A=A;
+        long prefix[]=new long[A.length];
+        long sum=0;
+        for(int i=0;i<A.length;i++){
+            sum+=A[i];prefix[i]=sum;
+        }
+        Node res=divide(prefix,0,prefix.length-1);
+        return res.cnt;
+    }
+    
+    public Node divide(long prefix[],int s,int e){
+        if(s==e){
+            Node node=new Node();
+            if(prefix[s]>=lower&&prefix[s]<=upper)node.cnt+=1;
+            node.A=new long[1];node.A[0]=prefix[s];
+            return node;
+        }
+        if(s<e){
+            int mid=s+(e-s)/2;
+            Node n1=divide(prefix,s,mid);
+            Node n2=divide(prefix,mid+1,e);
+            return merge(n1,n2);
+        }
+        return null;
+    }
+    
+    public Node merge(Node n1,Node n2){
+        //System.out.println(n1.cnt+"   "+n2.cnt);
+        Node res=new Node();
+        res.cnt+=(n1.cnt+n2.cnt);
+        int index=0,i=0,j=0,slidei=0;
+        long M[]=new long[n1.A.length+n2.A.length];
+        long A1[]=n1.A;//left
+        long A2[]=n2.A;//right
+        res.A=M;
+        Queue<Integer>queue=new LinkedList<>();
+        while(i<A1.length&&j<A2.length){
+            if(A1[i]<=A2[j]){
+                M[index++]=A1[i++];
+            }else{//right
+                while(slidei<A1.length&&A2[j]-A1[slidei]>=lower){
+                    queue.add(slidei);slidei++;
+                }
+                while(queue.size()!=0&&A2[j]-A1[queue.peek()]>upper){
+                    queue.poll();
+                }
+                M[index++]=A2[j++];
+                res.cnt+=queue.size();
+            }
+        }
+        while(i<A1.length){//left
+            M[index++]=A1[i];
+            i++;
+        }
+        while(j<A2.length){//right
+            while(slidei<A1.length&&A2[j]-A1[slidei]>=lower){
+                    queue.add(slidei);slidei++;
+            }
+            while(queue.size()!=0&&A2[j]-A1[queue.peek()]>upper){
+                    queue.poll();
+            }
+            res.cnt+=queue.size();
+            M[index++]=A2[j];
+            j++;
+        }
+        return res;
+    }
+    
+    class Node{
+        int cnt=0;
+        long A[];
+    }
+}
