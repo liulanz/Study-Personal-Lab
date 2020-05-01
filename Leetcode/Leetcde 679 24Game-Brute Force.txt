@@ -1,0 +1,69 @@
+class Solution {
+    boolean res=false;
+    Set<List<Double>>all=new HashSet<>();
+    public boolean judgePoint24(int[] arr) {
+        double nums[]=new double[4];
+        for(int i=0;i<arr.length;i++)nums[i]=arr[i];
+        generate(nums,new HashSet<>(),new ArrayList<>());
+        for(List<Double>list:all){
+            if(res)break;
+            find(list);
+        }
+        return res;
+    }
+    
+    public void find(List<Double>nums){
+        Set<Double>set1=new HashSet<>();
+        Set<Double>set2=new HashSet<>();
+        Set<Double>set3=new HashSet<>();
+        Set<Double>set4=new HashSet<>();
+        set1.add(nums.get(0));
+        set2.add(nums.get(1));
+        set3.add(nums.get(2));
+        set4.add(nums.get(3));
+        for(Double d:c(c(c(set1,set2),set3),set4)){
+            if(Math.abs(d - 24.0) < 0.001)res=true;
+        }
+        for(Double d:c(c(set1,set2),c(set3,set4))){
+            if(Math.abs(d - 24.0) < 0.001)res=true;
+        }
+        for(Double d:c(c(set1,c(set2,set3)),set4)){
+            if(Math.abs(d - 24.0) < 0.001)res=true;
+        }
+        for(Double d:c(set1,c(c(set2,set3),set4))){
+            if(Math.abs(d - 24.0) < 0.001)res=true;
+        }
+        for(Double d:c(set1,c(set2,c(set3,set4)))){
+            if(Math.abs(d - 24.0) < 0.001)res=true;
+        }
+        
+    }
+    
+    public Set<Double> c(Set<Double>set1,Set<Double>set2){
+        Set<Double>ans=new HashSet<>();
+        for(Double n1:set1){
+            for(Double n2:set2){
+                ans.add(n1+n2);
+                ans.add(n1-n2);
+                ans.add(n1*n2);
+                ans.add(n1/n2);
+            }
+        }
+        return ans;
+    }
+    public void generate(double nums[],Set<Integer>set,List<Double>list){
+        if(set.size()==4){
+            all.add(new ArrayList<>(list));
+            return;
+        }
+        for(int i=0;i<nums.length;i++){
+            if(set.contains(i))continue;
+            set.add(i);
+            list.add(nums[i]);
+            generate(nums,set,list);
+            set.remove(i);
+            list.remove(list.size()-1);
+        }
+    }
+   
+}
