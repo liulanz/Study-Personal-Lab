@@ -1,0 +1,54 @@
+class Solution {
+    int costs[];
+    public int minCost(int[][] grid) {
+        //1 :right  2:left
+        //3:down    4:up
+        Set<Integer>set=new HashSet<>();
+        costs=new int[grid.length*grid[0].length];
+        for(int i=0;i<costs.length;i++)costs[i]=Integer.MAX_VALUE;
+        costs[0]=0;
+        Queue<int[]>queue=new LinkedList<>();
+        int start[]=new int[3];
+        start[0]=0;start[1]=0;start[2]=0;
+        queue.add(start);
+        set.add(0);
+        while(queue.size()!=0){
+           int parent[]=queue.poll();
+           int row=parent[0];int col=parent[1];int cost=parent[2];
+           int dir=grid[row][col]; 
+           add(grid,row+1,col,queue,set,dir,3,cost);
+           add(grid,row-1,col,queue,set,dir,4,cost);
+           add(grid,row,col+1,queue,set,dir,1,cost);
+           add(grid,row,col-1,queue,set,dir,2,cost);
+        }
+        return costs[costs.length-1];
+    }
+    public void add(int grid[][],int row,int col,Queue<int[]>queue,Set<Integer>set,int dir,int changeDir,int cost){
+        if(row<0||col<0||row>=grid.length||col>=grid[0].length)return;
+        int id=row*grid[0].length+col;
+        int res[]=new int[3];
+        if(!set.contains(id)){
+            set.add(id);
+            res[0]=row;res[1]=col;
+            if(dir==changeDir){
+                res[2]=cost; 
+            }else{
+                res[2]=cost+1;
+            }
+            costs[id]=Math.min(costs[id],res[2]);
+            queue.add(res);
+        }else{
+            int newcost=cost;
+            if(dir==changeDir){
+               newcost=cost; 
+            }else{
+               newcost=cost+1;
+            }
+            if(newcost<costs[id]){
+                res[0]=row;res[1]=col;res[2]=newcost;
+                costs[id]=newcost;
+                queue.add(res);
+            }
+        }
+    }
+}
