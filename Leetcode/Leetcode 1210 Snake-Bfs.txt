@@ -1,0 +1,71 @@
+class Solution {
+    Set<List<Integer>>set=new HashSet<>();
+    Queue<int[]>q=new LinkedList<>();
+    public int minimumMoves(int[][] grid) {
+        List<Integer>l=new ArrayList<>();
+        l.add(0);l.add(1);set.add(l);
+        int start[]=new int[5];
+        start[0]=0;start[1]=0;
+        start[2]=0;start[3]=1;start[4]=0;
+        q.add(start);
+        while(q.size()!=0){
+            int parent[]=q.poll();
+            int tailr=parent[0];int tailc=parent[1];
+            int headr=parent[2];int headc=parent[3];
+            int level=parent[4];
+            if(tailr==grid.length-1&&tailc==grid[0].length-2&&headr==grid.length-1&&headc==grid[0].length-1){
+                return level;
+            }
+            if(tailr==headr){//horizontal
+              add(grid,tailr,tailc+1,headr,headc+1,level+1);//right 
+              add(grid,tailr+1,tailc,headr+1,headc,level+1);//down 
+              if(inrange(grid,tailr+1,tailc)&&inrange(grid,headr+1,headc)){
+                  add(grid,tailr,tailc,tailr+1,tailc,level+1);
+              }
+              
+            }
+            else if(tailc==headc){//vertival
+              add(grid,tailr,tailc+1,headr,headc+1,level+1);//right
+              add(grid,tailr+1,tailc,headr+1,headc,level+1);//down
+              if(inrange(grid,tailr,tailc+1)&&inrange(grid,headr,headc+1)){
+                  add(grid,tailr,tailc,tailr,tailc+1,level+1);
+              }
+            }
+        }
+        return -1;
+    }
+    
+    public void add(int grid[][],int tailr,int tailc,int headr,int headc,int level){
+ if(tailr<0||tailr>=grid.length||tailc<0||tailc>=grid[0].length||headr<0||headr>=grid.length||headc<0||headc>=grid[0].length)return;
+        if(grid[tailr][tailc]==1||grid[headr][headc]==1)return;
+        
+        int id1=tailr*grid[0].length+tailc;
+        int id2=headr*grid[0].length+headc;
+        List<Integer>list=new ArrayList<>();
+        list.add(id1);list.add(id2);
+        if(set.contains(list))return;
+        set.add(list);
+        int res[]=new int[5];
+        res[0]=tailr;res[1]=tailc;
+        res[2]=headr;res[3]=headc;res[4]=level;
+        q.add(res);
+    }
+    public boolean inrange(int grid[][],int r,int c){
+        if(r<0||c<0||r>=grid.length||c>=grid[0].length)return false;
+        if(grid[r][c]==1)return false;
+        return true;
+    }
+
+}
+//[[0,0,1,1,1,1],[0,0,0,0,1,1],[1,1,0,0,0,1],[1,1,1,0,0,1],[1,1,1,0,0,1],[1,1,1,0,0,0]]
+
+/*[[0,0,0,0,0,0,0,0,0,1],
+ [0,1,0,0,0,0,0,1,0,1],
+ [1,0,0,1,0,0,1,0,1,0],
+ [0,0,0,1,0,1,0,1,0,0],
+ [0,0,0,0,1,0,0,0,0,1],
+ [0,0,1,0,0,0,0,0,0,0],
+ [1,0,0,1,0,0,0,0,0,0],
+ [0,0,0,0,0,0,0,0,0,0],
+ [0,0,0,0,0,0,0,0,0,0],
+ [1,1,0,0,0,0,0,0,0,0]]*/
