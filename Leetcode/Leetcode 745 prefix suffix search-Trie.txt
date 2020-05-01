@@ -1,0 +1,73 @@
+class WordFilter {
+    Node trie[];
+    int res=-1;
+    public WordFilter(String[] words) {
+        trie=new Node[27];
+        for(int w=0;w<words.length;w++){
+            String s=words[w];
+            insert(w,"#"+s,0,trie);
+            StringBuilder suffix=new StringBuilder();
+            for(int i=s.length()-1;i>=0;i--){
+                char c=s.charAt(i);
+                suffix.insert(0,c+"");
+                String toInsert=suffix.toString()+"#"+s;
+                insert(w,toInsert,0,trie);
+            }
+        }
+    }
+    
+    public int f(String prefix, String suffix) {
+        String toSearch=suffix+"#"+prefix;
+        return search(toSearch,0,trie,-1);
+    }
+    
+    private int search(String world,int index,Node trie[],int val){
+        if(index>=world.length())return val;
+        char c=world.charAt(index);
+        if(c=='#'){
+            if(trie[26]==null)return -1;
+            return search(world,index+1,trie[26].childs,trie[26].w);
+        }else{
+            if(trie[c-'a']==null)return -1;
+            else return search(world,index+1,trie[c-'a'].childs,trie[c-'a'].w);
+        }
+    }
+    
+    private void insert(int weight,String world,int index,Node trie[]){
+        if(index>=world.length())return;
+        char c=world.charAt(index);
+        if(c=='#'){
+            if(trie[26]==null){
+                trie[26]=new Node(c);
+                trie[26].w=weight;
+                insert(weight,world,index+1,trie[26].childs);
+            }else{
+                trie[26].w=Math.max(trie[26].w,weight);
+                insert(weight,world,index+1,trie[26].childs);
+            }
+        }
+        else if(trie[c-'a']==null){
+            trie[c-'a']=new Node(c);
+            trie[c-'a'].w=weight;
+            insert(weight,world,index+1,trie[c-'a'].childs);
+        }else{
+            trie[c-'a'].w=Math.max(trie[c-'a'].w,weight);
+            insert(weight,world,index+1,trie[c-'a'].childs);
+        }
+    }
+    class Node{
+        char c;
+        Node childs[];
+        int w=0;
+        public Node(char c){
+            this.c=c;
+            childs=new Node[27];
+        }
+    }
+}
+
+/**
+ * Your WordFilter object will be instantiated and called as such:
+ * WordFilter obj = new WordFilter(words);
+ * int param_1 = obj.f(prefix,suffix);
+ */

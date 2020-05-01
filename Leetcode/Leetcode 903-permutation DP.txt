@@ -1,0 +1,33 @@
+class Solution {
+    int mod=1000000007;
+    long dp[][];
+    public int numPermsDISequence(String s) {//i: string index   end: end with number end
+        int len=s.length();
+        long res=0;
+        dp=new long[len+1][len+1];
+        dp[0][0]=1;
+        for(int i=1;i<=s.length();i++){
+            char c=s.charAt(i-1);
+            for(int end=0;end<=i;end++){
+                long val=0;
+                if(c=='D'){
+                    for(int j=end;j<=i-1;j++){
+                        val+=dp[i-1][j];
+                        val%=mod;
+                    }
+                }else{
+                    for(int j=0;j<end;j++){
+                        val+=dp[i-1][j];
+                        val%=mod;
+                    }
+                }
+                dp[i][end]=val;
+            }
+        }
+        for(int i=0;i<dp[0].length;i++){
+            res+=dp[len][i];
+            res%=mod;
+        }
+        return (int)(res%mod);
+    }
+}
