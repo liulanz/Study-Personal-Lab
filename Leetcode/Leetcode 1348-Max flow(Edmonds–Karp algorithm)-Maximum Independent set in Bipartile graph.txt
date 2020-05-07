@@ -1,0 +1,62 @@
+class Solution {
+    int flow=0;
+    int S,T;
+    int graph[][];
+    Set<Integer>remove=new HashSet<>();//cost 0 node
+    public int maxStudents(char[][] seats) {
+        int total=0;
+        int row=seats.length,col=seats[0].length;
+        graph=new int[row*col+2][row*col+2];
+        S=row*col;
+        T=row*col+1;
+        int dir[][]=new int[][]{{0,-1},{-1,-1},{1,-1},{0,1},{-1,1},{1,1}};
+        for(int r=0;r<seats.length;r++){
+            for(int c=0;c<seats[0].length;c++){
+                if(seats[r][c]=='#')continue;
+                total++;
+                int pos=r*seats[0].length+c;
+                if(c%2!=0){//even
+                    graph[S][pos]=1;
+                    for(int i=0;i<6;i++){
+                        int nr=r+dir[i][0];
+                        int nc=c+dir[i][1];
+                        if(nr<0||nr>=seats.length||nc<0||nc>=seats[0].length||seats[nr][nc]=='#')continue;
+                        graph[pos][nr*seats[0].length+nc]=1;
+                    }
+                }else{//odd
+                    graph[pos][T]=1;
+                }
+            }
+        }
+        while(true){
+            int path[]=new int[graph.length];
+            Arrays.fill(path,-1);
+            boolean visit[]=new boolean[path.length];
+            Queue<Integer>queue=new LinkedList<>();
+            queue.add(S);
+            visit[S]=true;
+            while(queue.size()!=0){
+                int parent=queue.poll();
+                if(parent==T)break;
+                for(int i=0;i<graph.length;i++){
+                    if(!visit[i]&&graph[parent][i]==1){
+                        visit[i]=true;
+                        path[i]=parent;
+                        queue.add(i);
+                    }
+                }
+            }
+            if(path[T]==-1)break;
+            int cur=T;
+            while(true){
+                int p=path[cur];
+                graph[p][cur]-=1;
+                graph[cur][p]+=1;
+                cur=p;
+                if(cur==S)break;
+            }
+            flow++;
+        }
+        return total-flow;
+    }
+}
