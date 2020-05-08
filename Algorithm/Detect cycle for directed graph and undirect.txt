@@ -1,0 +1,98 @@
+How to detect a cycle in a directed graph
+
+Using DFS by marking the visited nodes, there is a cycle if a visited node is also part of the current stack
+
+The stack can be managed as a boolean array
+
+boolean isCyclic(DirectedGraph g) {
+	boolean[] visited = new boolean[g.size()];
+	boolean[] stack = new boolean[g.size()];
+
+	for (int i = 0; i < g.size(); i++) {
+		if (isCyclic(g, i, visited, stack)) {
+			return true;
+		}
+	}
+	return false;
+}
+
+boolean isCyclic(DirectedGraph g, int node, boolean[] visited, boolean[] stack) {
+	if (stack[node]) {
+		return true;
+	}
+
+	if (visited[node]) {
+		return false;
+	}
+
+	stack[node] = true;
+	visited[node] = true;
+
+	List<DirectedGraph.Edge> edges = g.getEdges(node);
+	for (DirectedGraph.Edge edge : edges) {
+		int destination = edge.destination;
+		if (isCyclic(g, destination, visited, stack)) {
+			return true;
+		}
+	}
+
+	// Backtrack
+	stack[node] = false;
+
+	return false;
+}
+
+
+
+
+
+
+
+
+
+
+
+How to detect a cycle in an undirected graph
+
+
+Using DFS
+
+Idea: for every visited vertex v, if there is an adjacent u such that u is already visited and u is not the parent of v, then there is a cycle
+
+
+
+
+
+
+
+
+
+public boolean isCyclic(UndirectedGraph g) {
+	boolean[] visited = new boolean[g.size()];
+	for (int i = 0; i < g.size(); i++) {
+		if (!visited[i]) {
+			if (isCyclic(g, i, visited, -1)) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+private boolean isCyclic(UndirectedGraph g, int v, boolean[] visited, int parent) {
+	visited[v] = true;
+
+	List<UndirectedGraph.Edge> edges = g.getEdges(v);
+	for (UndirectedGraph.Edge edge : edges) {
+		if (!visited[edge.destination]) {
+			if (isCyclic(g, edge.destination, visited, v)) {
+				return true;
+			}
+		} else if (edge.destination != parent) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
