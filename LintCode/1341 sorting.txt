@@ -1,0 +1,57 @@
+public class Solution {
+    /**
+     * @param a: the array in problem.
+     * @return: represent the new number.
+     */
+    public String Combine(List<Integer> A) {
+        StringBuilder res=new StringBuilder();
+        int remain=0;
+        boolean found=false;
+        int arr[]=new int[3];
+        List<Pair>list=new ArrayList<>();
+        List<String>l=new ArrayList<>();
+        for(int n:A){
+            list.add(new Pair(n+"",n%3));
+            remain+=n;
+            remain%=3;
+            if(n%3==0)arr[0]++;
+            else if(n%3==1)arr[1]++;
+            else arr[2]++;
+        }
+        Collections.sort(list,(p1,p2)->{
+           if(p1.s.length()==p2.s.length()){
+              return p2.s.compareTo(p1.s);
+           }
+           return p2.s.length()-p1.s.length();
+        });
+        for(int i=0;i<list.size();i++){
+            Pair p=list.get(i);
+            if(remain!=0&&p.mod==remain&&arr[p.mod]==1){
+            }else{
+                l.add(p.s);
+            }
+            arr[p.mod]--;
+        }
+        Collections.sort(l,(s1,s2)->{
+            String xy=s1+s2;
+            String yx=s2+s1;
+            if(xy.compareTo(yx)>0)return -1;
+            if(xy.compareTo(yx)<0)return 1;
+            return 0;
+        });//58 585 583
+        for(int i=0;i<l.size();i++)res.append(l.get(i));
+        if(res.toString().charAt(0)=='0')return "0";
+        return res.toString();
+    }
+    class Pair{
+        String s;
+        int mod;
+        public Pair(String s,int mod){
+            this.s=s;
+            this.mod=mod;
+        }
+        public String toString(){
+            return "["+this.s+","+this.mod+"]";
+        }
+    }
+}
