@@ -1,0 +1,32 @@
+#include <iostream>
+#include <vector>
+#include <unordered_set> 
+#include <unordered_map> 
+#include <algorithm> 
+#include<math.h>
+using namespace std;
+void solve(vector<int>&A,int money,int Case){
+    sort(A.begin(),A.end());
+    int sum=0,cnt=0;
+    for(int &n:A){
+        sum+=n;
+        if(sum>money)break;
+        cnt++;
+    }
+    cout<<"Case #"<<Case<<": "<<cnt<<endl;
+}
+int main(){
+    int T;
+    cin>>T;
+    for(int i=1;i<=T;i++){
+        int N,B;
+        cin>>N>>B;
+        vector<int>A;
+        for(int j=0;j<N;j++){
+            int x;cin>>x;
+            A.push_back(x);
+        }
+        solve(A,B,i);
+    }
+    return 0;
+}
