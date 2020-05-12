@@ -19,31 +19,46 @@ public class Main {
 
 class Solution{
 	public void solution(int A[]){
-		//shortest unordered subsequence
-		if(A.length<3){
-			System.out.println(0);
-			return;
-		}
-		if(A[1]>=A[0]){
-			for(int i=2;i<A.length;i++){
-				if(A[i]<A[i-1]){
+			//shortest unordered subsequence
+			if(A.length<3){
+				System.out.println(0);
+				return;
+			}
+			boolean increase=false;
+			int index=-1;
+			int start=-1;
+			for(int i=1;i<A.length;i++){
+				if(A[i]>A[i-1]){
+					increase=true;
+					start=i;
+					index=i+1;
+				}
+				if(A[i]<A[i-1]&&increase){
 					System.out.println(3);
-					System.out.print(1+" ");
+					System.out.print(start+" ");
+					System.out.print(index+" ");
+					System.out.print(i+1);
+					return;
+				}
+			}
+		
+		
+			boolean decrease=false;
+			for(int i=1;i<A.length;i++){
+				if(A[i]<A[i-1]){
+					decrease=true;
+					start=i;
+					index=i+1;
+				}
+				if(A[i]>A[i-1]&&decrease){
+					System.out.println(3);
+					System.out.print(start+" ");
 					System.out.print(i+" ");
 					System.out.print(i+1);
 					return;
 				}
 			}
-		}
-		if(A[1]<=A[0]){
-			for(int i=2;i<A.length;i++){
-				if(A[i]>A[i-1]){
-					System.out.println(3);
-					System.out.print(1+" ");
-					System.out.print(i+" ");
-					System.out.print(i+1);
-				}
-			}
-		}
+		
+			System.out.println(0);
 	}
 }
