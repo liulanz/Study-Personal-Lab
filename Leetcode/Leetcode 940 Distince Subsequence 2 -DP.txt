@@ -1,0 +1,24 @@
+class Solution {
+    public int distinctSubseqII(String s) {
+        int mod=1000000007;
+        long res=0;
+        long dp[]=new long[26];
+        for(int i=0;i<s.length();i++){
+            int index=s.charAt(i)-'a';
+            long val=0;
+            for(int j=0;j<26;j++){
+               val+=dp[j];
+               val%=mod;
+            }
+            dp[index]=val+1;
+        }
+        
+        for(long n:dp){
+            res+=n;
+        }
+        return (int)(res%mod);
+    }
+    
+    //a ab b 
+    //a ab b aa aba ba
+}
