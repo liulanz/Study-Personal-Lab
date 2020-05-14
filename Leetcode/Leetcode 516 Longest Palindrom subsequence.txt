@@ -1,0 +1,28 @@
+class Solution {
+    public int longestPalindromeSubseq(String s) {
+        // f(i,j)= #palindrom for s.substring(i,j)
+        int ans=1;
+        int dp[][]=new int[s.length()][s.length()];
+        for(int row=0;row<dp.length;row++){
+            for(int col=0;col<dp[0].length;col++){
+                    dp[row][col]=1; 
+            }
+        }
+        
+        for(int left=s.length()-1;left>=0;left--){
+            for(int right=left+1;right<s.length();right++){
+                if(s.charAt(left)==s.charAt(right)){
+                    if(right==left+1){
+                        dp[left][right]=2;
+                    }else{
+                        dp[left][right]=2+dp[left+1][right-1];
+                    }
+                }else{
+                    dp[left][right]=Math.max(dp[left+1][right],dp[left][right-1]);
+                }
+            }
+        }
+        ans=dp[0][s.length()-1];
+        return ans;
+    }
+}

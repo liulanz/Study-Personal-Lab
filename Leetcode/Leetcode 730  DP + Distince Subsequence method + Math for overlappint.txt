@@ -1,0 +1,41 @@
+class Solution {
+    int mod=1000000007;
+    long dp[][][];
+    public int countPalindromicSubsequences(String s) {
+        dp=new long[s.length()][s.length()][4]; 
+        for(int i=0;i<dp.length;i++){
+            for(int j=0;j<dp[0].length;j++){
+                Arrays.fill(dp[i][j],-1);
+            }
+        }
+        long res=0;
+        for(int i=0;i<4;i++)res+=dfs(s,0,s.length()-1,i);
+        return (int)(res%mod);
+    }
+    public long dfs(String s,int l,int r,int pos){
+        if(r<l)return 0;
+        if(l==r){
+            if(pos==s.charAt(l)-'a'){
+                dp[l][r][pos]=1;
+                return 1;
+            }
+            return 0;
+        }
+        if(dp[l][r][pos]!=-1)return dp[l][r][pos];
+        long res=0;
+        if(s.charAt(l)==s.charAt(r)&&s.charAt(l)-'a'==pos){
+            for(int i=0;i<4;i++){
+                res+=dfs(s,l+1,r-1,i);
+                res%=mod;
+            }
+            res+=2;
+        }else{
+            res+=dfs(s,l+1,r,pos);
+            res+=dfs(s,l,r-1,pos);
+            res-=dfs(s,l+1,r-1,pos);
+            res%=mod;   
+        }
+        dp[l][r][pos]=res;
+        return res;
+    }
+}
