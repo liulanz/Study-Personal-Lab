@@ -1,0 +1,65 @@
+public class Solution {
+    /**
+     * @param n: the range of element is in [1,n]
+     * @return: return the number of good collections
+     */
+    int mod=1000000007;
+    int visit[];
+    int N;
+    public int numberOfCollections(int n) {
+        // write your code here
+        this.N=n;
+        visit=new int[n+1];
+        long res=1;
+        for(int i=1;i<=n;i++){
+            if(visit[i]==1)continue;
+            long val=get(i);
+            //System.out.println(val);
+            res*=val;
+            res%=mod;
+        }
+        return (int)(res);
+    }
+    public long get(int base){
+        List<Integer>list=new ArrayList<>();
+        for(int i=base;i<=N;i*=3){
+            int cnt=0;
+            for(int j=i;j<=N;j*=2){
+                visit[j]=1;
+                cnt++;
+            }
+            list.add(cnt);
+        }
+        long res=0;
+        long dp[][]=new long[list.size()][1<<list.get(0)];
+        for(int i=0;i<(1<<list.get(0));i++){
+            if ((i&(i>>1))==0) dp[0][i]=1;
+        }
+
+        for(int i=1;i<list.size();i++){
+            int cnt=list.get(i);
+            for(int cur=0;cur<(1<<cnt);cur++){
+                if((cur&(cur>>1))!=0)continue;
+                for(int pre=0;pre<(1<<list.get(i-1));pre++){
+                    //System.out.println(pre);
+                    if((cur&pre)!=0||dp[i-1][pre]==0)continue;
+                    dp[i][cur]+=dp[i-1][pre];
+                    dp[i][cur]%=mod;
+                }
+            }
+        }
+        for(int i=0;i<dp[0].length;i++){
+            res+=dp[dp.length-1][i];
+            res%=mod;
+        }
+        return res;
+    }
+    
+    public void print(long dp[][]){
+        for(int i=0;i<dp.length;i++){
+            for(int j=0;j<dp[0].length;j++){
+                System.out.print(dp[i][j]+" ");
+            }System.out.println();
+        }
+    }
+}
