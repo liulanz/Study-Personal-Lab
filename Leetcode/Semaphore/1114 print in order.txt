@@ -1,0 +1,29 @@
+public class Foo {
+    private Semaphore semaphore3;
+    private Semaphore semaphore2;
+
+    public Foo() {
+        semaphore3 = new Semaphore(1);
+        semaphore2 = new Semaphore(1);
+        try {
+            semaphore2.acquire();
+            semaphore3.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+    }
+    public void first(Runnable printFirst) throws InterruptedException {
+        printFirst.run();
+        semaphore2.release();
+    }
+    public void second(Runnable printSecond) throws InterruptedException {
+        semaphore2.acquire();
+        printSecond.run();
+        semaphore3.release();
+    }
+    public void third(Runnable printThird) throws InterruptedException {
+        semaphore3.acquire();
+        printThird.run();
+    }
+}
