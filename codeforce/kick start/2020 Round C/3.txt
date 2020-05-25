@@ -1,0 +1,47 @@
+#include <iostream>
+#include <iostream>
+#include <vector>
+#include <unordered_set> 
+#include <unordered_map> 
+#include <algorithm> 
+#include<math.h>
+#include<string>
+using namespace std;
+
+void solve(vector<int>&A, int t) {
+	long res = 0;
+	long sum = 0;
+	long max = 0;
+	for (int &n : A)max += abs(n);
+	vector<int>cnt(max*2+1);
+	for (int i = 0; i<A.size(); i++) {
+		sum += A[i];
+		for (long j = 0; j*j <= max+sum; j++) {
+			if (sum == j * j)res++;
+			res += cnt[max+sum - j * j];
+		}
+		cnt[max+sum]++;
+	}
+
+	cout << "Case #" << t << ": " << res << endl;
+
+}
+
+int main()
+{
+	int T;
+	cin >> T;
+	for (int t = 1; t <= T; t++) {
+		int N;
+		cin >> N;
+		vector<int>A;
+		for (int i = 0; i<N; i++) {
+			int x;
+			cin >> x;
+			A.push_back(x);
+		}
+		solve(A, t);
+	}
+
+	return 0;
+}
