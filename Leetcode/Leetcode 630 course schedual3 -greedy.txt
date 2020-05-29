@@ -1,0 +1,23 @@
+class Solution {
+    public int scheduleCourse(int[][] courses) {
+        Arrays.sort(courses,(a1,a2)-{
+            return a1[1]-a2[1];
+        });
+        PriorityQueueIntegerpq=new PriorityQueue((a,b)-{
+            return b-a;
+        });
+        int sum=0;
+        for(int course[]courses){
+            if(sum+course[0]=course[1]){
+                pq.add(course[0]);
+                sum+=course[0];
+            }
+            else{
+                pq.add(course[0]);
+                sum+=course[0];
+                sum-=pq.poll();
+            }
+        }
+        return pq.size();
+    }
+}
