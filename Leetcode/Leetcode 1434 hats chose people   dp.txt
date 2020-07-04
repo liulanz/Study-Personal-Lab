@@ -1,0 +1,51 @@
+class Solution {
+    int mod=1000000007;
+    long dp[][];
+    List<List<Integer>>people=new ArrayList<>();
+    public int numberWays(List<List<Integer>> hats) {
+        Map<Integer,Set<Integer>>map=new HashMap<>();
+        int path=0;
+        for(int i=0;i<hats.size();i++){
+            path=path^(1<<i);
+            for(int h:hats.get(i)){
+                if(!map.containsKey(h))map.put(h,new HashSet<>());
+                map.get(h).add(i);
+            }
+        }
+        dp=new long[map.size()][path+1];
+        for(int i=0;i<dp.length;i++){
+            Arrays.fill(dp[i],-1);
+        }
+        
+        for(Integer h:map.keySet()){
+            List<Integer>list=new ArrayList<>();
+            for(int p:map.get(h)){
+                list.add(p);
+            }
+            people.add(list);
+        }
+        return (int)(dfs(0,path));
+    }
+    public long dfs(int index,int path){
+        if(index>=people.size()){
+            if(path==0)return 1;
+            return 0;
+        }
+        if(path==0)return 1;
+        if(dp[index][path]!=-1)return dp[index][path];
+        List<Integer>chose=people.get(index);
+        long res=0;
+        res+=dfs(index+1,path);
+        res%=mod;
+        for(int p:chose){
+            if((path&(1<<p))!=0){//can chose
+                int newp=path^(1<<p);
+                res+=dfs(index+1,newp);
+                res%=mod;
+            }
+        }
+        dp[index][path]=res;
+        return res;
+        
+    }
+}
