@@ -1,0 +1,98 @@
+class Solution {
+    public String minInteger(String s, int k) {
+        Seg seg=new Seg(0,s.length()-1);
+        StringBuilder str=new StringBuilder();
+        Queue<Integer>A[]=new LinkedList[10];
+        for(int i=0;i<10;i++)A[i]=new LinkedList<>();
+        for(int i=0;i<s.length();i++){
+            char c=s.charAt(i);
+            A[c-'0'].add(i);
+        }
+        
+        while(k>0){
+            int i=Integer.MAX_VALUE;
+            for(int j=0;j<10;j++){
+                if(A[j].size()==0)continue;
+                i=Math.min(i,A[j].peek());
+            }
+            if(i==Integer.MAX_VALUE)break;
+            char cur=s.charAt(i);
+            boolean found=false;
+            for(int j=0;j<10;j++){
+                char next=(char)(j+'0');
+                if(next>=cur)break;
+                if(A[j].size()==0)continue;//nothing can take out
+                int index=A[j].peek();
+                int cnt=seg.query(i+1,index);
+                if(cnt<=k){//smallest
+                    found=true;
+                    A[j].poll();
+                    k-=cnt;
+                    str.append(next);
+                    seg.update(index);
+                    break;
+                }
+            }
+            if(!found){
+                A[cur-'0'].poll();
+                str.append(""+cur);
+            }
+        }
+        for(int i=0;i<s.length();i++){
+            char c=s.charAt(i);
+            if(A[c-'0'].size()==0)continue;
+            if(A[c-'0'].peek()!=i)continue;
+            str.append(""+c);A[c-'0'].poll();
+        }
+        return str.toString();
+    }
+    
+    class Seg{
+        int l,r;
+        Seg left,right;
+        int cnt;
+        public Seg(int l,int r){
+            this.l=l;this.r=r;
+            if(l!=r){
+                int mid=l+(r-l)/2;
+                left=new Seg(l,mid);
+                right=new Seg(mid+1,r);
+                cnt=(r-l)+1;
+            }else{
+                cnt=1;
+            }
+            
+        }
+        
+        public int query(int s,int e){
+            if(l==s&&e==r){
+                return cnt;
+            }
+            int mid=l+(r-l)/2;
+            int res=0;
+            if(e<=mid){
+                res+=left.query(s,e);
+            }
+            else if(s>=mid+1){
+                res+=right.query(s,e);
+            }else{
+                res+=left.query(s,mid)+right.query(mid+1,e);
+            }
+            return res;
+            
+        }
+        
+        public void update(int index){
+            this.cnt--;
+            if(l==r&&l==index){
+                return;
+            }
+            int mid=l+(r-l)/2;
+            if(index<=mid){
+                left.update(index);
+            }else{
+                right.update(index);
+            }
+        }
+    }
+}
