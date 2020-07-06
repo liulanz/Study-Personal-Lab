@@ -1,0 +1,35 @@
+class Solution {
+    public int networkDelayTime(int[][] times, int N, int K) {
+        boolean visit[][]=new boolean[N+1][N+1];
+        int weight[][]=new int[N+1][N+1];
+        List<Integer>adjecent[]=new ArrayList[N+1];
+        for(int i=0;i<=N;i++)adjecent[i]=new ArrayList<>();
+        int cost[]=new int[N+1];
+        Arrays.fill(cost,Integer.MAX_VALUE);
+        for(int A[]:times){
+            int v1=A[0],v2=A[1],w=A[2];
+            adjecent[v1].add(v2);
+            weight[v1][v2]=w;
+        }
+        PriorityQueue<int[]>pq=new PriorityQueue<>((a,b)->{
+            return a[1]-b[1];
+        });
+        cost[k]=0;
+        pq.add(new int[]{k,0});
+        while(pq.size()!=0){
+            int pair[]=pq.poll();
+            int v=pair[0],w=pair[1];
+            if(w>=cost[v])continue;
+            List<Integer>childs=adjecent[v];
+            for(int c:childs){
+                if(visit[v][c])continue;
+                visit[v][c]=true;
+                pq.add(new int[]{c,w+weight[v][c]});
+                cost[c]=Math.min(cost[c],w+weight[v][c]);
+            }
+        }
+        int res=0;
+        for(int i=1;i<cost.length;i++)res=Math.max(cost[i]);
+        return res;
+    }
+}
