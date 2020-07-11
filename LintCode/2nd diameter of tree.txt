@@ -1,0 +1,135 @@
+public class Solution {
+    /**
+     * @param edge: edge[i][0] [1] [2]  start point,end point,value
+     * @return: return the second diameter length of the tree
+     */
+    List<Integer>adjecent[];
+    Map<String,Integer>map=new HashMap<>();
+    public long getSecondDiameter(int[][] edge) {
+        // write your code here
+        int n=edge.length+1;
+        long dis[]=new long[n];
+        Set<Integer>set=new HashSet<>();
+        
+        adjecent=new ArrayList[n];
+        for(int i=0;i<n;i++)adjecent[i]=new ArrayList<>();
+    
+        
+        for(int A[]:edge){
+            int v1=A[0],v2=A[1],w=A[2];
+            adjecent[v1].add(v2);
+            adjecent[v2].add(v1);
+            map.put(v1+","+v2,w);map.put(v2+","+v1,w);
+        }//preprocessing
+
+        Queue<long[]>q=new LinkedList<>();
+        q.add(new long[]{0l,0l});set.add(0);
+        while(q.size()!=0){
+            long pair[]=q.poll();
+            int v=(int)(pair[0]);long w=pair[1];//System.out.println(v+"  "+w);
+            List<Integer>childs=adjecent[v];
+            for(int c:childs){
+                if(set.contains(c))continue;
+                set.add(c);
+                q.add(new long[]{c,w+map.get(v+","+c)});
+                dis[c]=w+map.get(v+","+c);
+            }
+        }
+        
+        long max=-1;int e1=-1,e2=-1;
+        for(int i=0;i<dis.length;i++){
+            if(max<dis[i]){
+                max=dis[i];e1=i;
+            }
+        }//find the first farthest Node
+        
+        
+        q=new LinkedList<>();
+        dis=new long[n];
+        set=new HashSet<>();
+        set.add(e1);
+        
+        q.add(new long[]{e1,0});set.add(e1);
+        while(q.size()!=0){
+            long pair[]=q.poll();
+            int v=(int)(pair[0]);long w=pair[1];
+            //System.out.println(v+"  "+w);
+            List<Integer>childs=adjecent[v];
+            for(int c:childs){
+                if(set.contains(c))continue;
+                set.add(c);
+                q.add(new long[]{c,w+map.get(v+","+c)});
+                dis[c]=w+map.get(v+","+c);
+            }
+        }
+        max=-1;
+        for(int i=0;i<dis.length;i++){
+            if(max<dis[i]){
+                max=dis[i];
+                e2=i;
+            }
+        }//find the second farthest Node
+        return Math.max(find(edge,e1),find(edge,e2));
+    }
+    
+    public long find(int[][] edge,int remove){
+        int n=edge.length+1;
+        int res=0;
+        //Map<String,Integer>map=new HashMap<>();
+        long dis[]=new long[n];Set<Integer>set=new HashSet<>();
+
+        
+        Queue<long[]>q=new LinkedList<>();
+        for(int i=0;i<n;i++){
+            if(i!=remove){
+                q.add(new long[]{i,0});
+                set.add(i);
+                break;
+            }
+        }
+        
+        while(q.size()!=0){
+            long pair[]=q.poll();
+            int v=(int)(pair[0]);long w=pair[1];
+            List<Integer>childs=adjecent[v];
+            for(int c:childs){
+                if(set.contains(c)||c==remove)continue;
+                set.add(c);
+                //System.out.println(v+","+c);
+                q.add(new long[]{c,w+map.get(v+","+c)});
+                dis[c]=w+map.get(v+","+c);
+            }
+        }
+        
+        long max=-1;int e1=-1,e2=-1;
+        for(int i=0;i<dis.length;i++){
+            if(max<dis[i]){
+                max=dis[i];e1=i;
+            }
+        }//find the first farthest Node
+
+        q=new LinkedList<>();
+        dis=new long[n];
+        set=new HashSet<>();set.add(e1);
+
+        q.add(new long[]{e1,0});
+        while(q.size()!=0){
+            long pair[]=q.poll();
+            int v=(int)(pair[0]);long w=pair[1];
+            List<Integer>childs=adjecent[v];
+            for(int c:childs){
+                if(set.contains(c)||c==remove)continue;
+                set.add(c);
+                q.add(new long[]{c,w+map.get(v+","+c)});
+                dis[c]=w+map.get(v+","+c);
+            }
+        }
+        max=-1;
+        for(int i=0;i<dis.length;i++){
+            if(max<dis[i]){
+                max=dis[i];e2=i;
+            }
+        }//find the second farthest Node
+        return max;
+    }
+}
