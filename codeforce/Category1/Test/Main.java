@@ -26,20 +26,17 @@ public class Main {
  
 class Solution{
 	public void solution(long n,int A[],int t,PrintWriter out){
+		long N=n;
 		double sum=0;
 		for(long i:A)sum+=i;
-		/*if(t==351){
-			System.out.println("test  "+n);
-			print1(A);
-		}*/
 		if(sum<n){
-			System.out.println(-1);
+			out.println(-1);
 			return;
 		}
 		TreeMap<Integer,Integer>treemap=new TreeMap<>();
 		int res=0;
 		int neg[]=new int[64];
-		int pos[]=new int[32];
+		int pos[]=new int[64];
 		for(int i=0;i<64;i++){
 			long bit=n&1;
 			n>>=1;
@@ -53,61 +50,72 @@ class Solution{
 			}
 		}
 		
-		
 		for(int i=0;i<pos.length;i++){//negate those  prior   bit first
 			if(neg[i]==0||pos[i]==0)continue;
-			neg[i]--;pos[i]--;
+			neg[i]--;
+			pos[i]--;
 		}
-		
-		for(int i=0;i<32;i++){
-			if(pos[i]!=0){
-				if(!treemap.containsKey(i))treemap.put(i,0);
-				treemap.put(i,treemap.get(i)+1);
-			}
-		}
-		
 		int last=-1;
 		for(int i=0;i<neg.length;i++){//fill from small
-			if(neg[i]==0)continue;
+			if(neg[i]==0){
+				if(last>i)pos[i]++;
+				continue;
+			}
 			int cnt=1;
 			boolean found=false;
 			for(int j=i-1;j>=0;j--){
-				if(j>=pos.length)break;
 				cnt*=2;
 				if(pos[j]>=cnt){
 					neg[i]=0;
-					pos[j]-=cnt;
 					found=true;
 					break;
 				}else{
 					cnt-=pos[j];
 				}
 			}
-			if(!found){//problemetic 
-				if(last>=i)continue;
+			
+			if(found){
+				cnt=1;
+				for(int j=i-1;j>=0;j--){
+					cnt*=2;
+					if(pos[j]>=cnt){
+						neg[i]=0;
+						pos[j]-=cnt;
+						found=true;
+						break;
+					}else{
+						cnt-=pos[j];
+					}
+				}
+			}
+			else {//problemetic 
+				if(last>i)continue;
+				treemap=new TreeMap<>();
+				for(int k=0;k<pos.length;k++){
+					if(pos[k]!=0)treemap.put(k,1);
+				}
 				Integer ceil=treemap.ceilingKey(i);
-				if(ceil==null)continue;
-				if(ceil!=null)last=ceil;
+				last=ceil;
 				res+=(ceil-i);
-				/*if(ceil==i){
-					treemap.put(i,treemap.get(i)-1);
-					if(treemap.get(i)==0)treemap.remove(i);
-				}else{
-					treemap.put(i,1);
-				}*/
 				pos[ceil]--;
 				neg[i]=0;
 			}
 		}
-		System.out.println(res);
+		out.println(res);
 	}
+	
+	
 	
 	//helper function I would use
 	public int get(int A[],int i){
 		if(i<0||i>=A.length)return -1;
 		return A[i];
 	}
-	
+	public int[] copy(int A[]){
+		int a[]=new int[A.length];
+		for(int i=0;i<a.length;i++)a[i]=A[i];
+		return a;
+	}
 	public void print1(int A[]){
 		for(int i:A)System.out.print(i+" ");
 		System.out.println();
