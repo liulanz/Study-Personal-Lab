@@ -8,13 +8,13 @@ public class Main {
 	public static void main (String[] args) throws java.lang.Exception {
 	    Scanner in = new Scanner(System.in);
 		//InputReader in = new InputReader(System.in);
-		//int T =in.nextInt();
+		int T =in.nextInt();
 		PrintWriter out = new PrintWriter(System.out);
-		//for(int t=0;t<T;t++){
-			long k = in.nextLong();
+		for(int t=0;t<T;t++){
+			String ss=in.next();
 			Solution s=new Solution();
-			s.solution(k);
-		//}
+			s.solution(ss);
+		}
 		out.flush();
 		in.close();
 	}
@@ -23,43 +23,23 @@ public class Main {
  
 class Solution{
 	
-	public void solution(long k){
-		if(k==1){
-			System.out.println("codeforces");
-			return;
-		}
-		String s="codeforces";
-		int len=10;//fixed
-		int dp[]=new int[10];
-		Arrays.fill(dp,1);
-		StringBuilder str=new StringBuilder();
-		while(true){
-			boolean found=false;
-			for(int i=0;i<10;i++){
-				dp[i]++;
-				if(cal(dp)>=k){
-					found=true;
-					break;
-				}
-			}
-			if(found)break;
-		}
-		System.out.println(cal(dp));
-		for(int i=0;i<dp.length;i++){
-			int T=dp[i];
-			for(int t=0;t<T;t++){
-				str.append(s.charAt(i));
+	public void solution(String s){
+		List<Integer>l=new ArrayList<>();
+		l.add(-1);
+		for(int i=0;i<s.length();i++){
+			if(s.charAt(i)=='R'){
+				l.add(i);
 			}
 		}
-		System.out.println(str.toString());
+		l.add(s.length());
+		int res=0;
+		for(int i=1;i<l.size();i++){
+			res=Math.max(res,l.get(i)-l.get(i-1));
+		}
+		System.out.println(res);
 	}
 	
-	public long cal(int A[]){
-		long pro=1;
-		for(int i:A)pro*=i;
-		return pro;
-	}
-	
+
 	
 	
 	
