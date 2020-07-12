@@ -1,3 +1,4 @@
+
 // Don't place your source in a package
 import java.util.*;
 import java.lang.*;
@@ -11,9 +12,12 @@ public class Main {
 		int T =in.nextInt();
 		PrintWriter out = new PrintWriter(System.out);
 		for(int t=0;t<T;t++){
-			String ss=in.next();
+			String input=in.next();
+			//int A[]=new int[n];
+			//for(int i=0;i<n;i++)A[i]=in.nextInt();
+			
 			Solution s=new Solution();
-			s.solution(ss);
+			s.solution(input);
 		}
 		out.flush();
 		in.close();
@@ -23,23 +27,45 @@ public class Main {
  
 class Solution{
 	
-	public void solution(String s){
-		List<Integer>l=new ArrayList<>();
-		l.add(-1);
-		for(int i=0;i<s.length();i++){
-			if(s.charAt(i)=='R'){
-				l.add(i);
+	public void solution(String ss){
+		// R  => paper
+		// S  => rock
+		// P  => siscor
+		Map<Character,String>map=new HashMap<>();
+		int r=0,s=0,p=0;
+		map.put('R',"P");map.put('S',"R");map.put('P',"S");
+		StringBuilder str=new StringBuilder();
+		for(int i=0;i<ss.length();i++){
+			char c=ss.charAt(i);
+			if(c=='R')r++;
+			else if(c=='P')p++;
+			else s++;
+		}
+		PriorityQueue<Integer>pq=new PriorityQueue<>((a,b)->{
+			return b-a;
+		});
+		pq.add(r);pq.add(s);pq.add(p);
+		int top=pq.poll();
+		if(top==r){
+			for(int i=0;i<ss.length();i++){
+				str.append("P");
 			}
 		}
-		l.add(s.length());
-		int res=0;
-		for(int i=1;i<l.size();i++){
-			res=Math.max(res,l.get(i)-l.get(i-1));
+		else if(top==s){
+			for(int i=0;i<ss.length();i++){
+				str.append("R");
+			}
 		}
-		System.out.println(res);
+		else{
+			for(int i=0;i<ss.length();i++){
+				str.append("S");
+			}
+		}
+		System.out.println(str.toString());
+		
 	}
 	
-
+ 
 	
 	
 	
