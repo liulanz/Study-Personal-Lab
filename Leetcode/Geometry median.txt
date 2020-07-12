@@ -1,0 +1,42 @@
+class Solution {
+    int MAX=Integer.MAX_VALUE;
+    int MIN=Integer.MIN_VALUE;
+    public double getMinDistSum(int[][] positions) {
+        double res=Integer.MAX_VALUE;
+        double cx=0,cy=0;
+        double delta=10;
+        double left=MAX,right=MIN;
+        double bottom=MAX,top=MIN;
+        for(int pair[]:positions){
+            int x=pair[0],y=pair[1];
+            left=Math.min(left,x);right=Math.max(right,x);
+            bottom=Math.min(bottom,y);top=Math.max(top,y);
+        }
+        
+        while(delta>=0.00001){
+            for(double i=left-delta;i<=right+delta;i+=(delta)){
+                for(double j=bottom-delta;j<=top+delta;j+=(delta)){
+                    double dis=cal(positions,i,j);
+                    if(res>dis){
+                        res=dis;
+                        cx=i;
+                        cy=j;
+                    }
+                }
+            }
+            left=cx-delta;right=cx+delta;
+            bottom=cy-delta;top=cy+delta;
+            delta/=10;
+        }
+        return res;
+    }
+    public double cal(int[][] A,double x,double y){
+        double res=0;
+        for(int pair[]:A){
+            double x1=pair[0],y1=pair[1];
+            double dis=(x-x1)*(x-x1)+(y-y1)*(y-y1);
+            res+=Math.sqrt(dis);
+        }
+        return res;
+    }
+}
