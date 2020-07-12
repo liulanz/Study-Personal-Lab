@@ -11,17 +11,9 @@ public class Main {
 		//int T =in.nextInt();
 		PrintWriter out = new PrintWriter(System.out);
 		//for(int t=0;t<T;t++){
-			int n = in.nextInt();
-			int m = in.nextInt();
-			int graph[][]=new int[n][n];
-			for(int i=0;i<m;i++){
-				int v1=in.nextInt()-1;
-				int v2=in.nextInt()-1;
-				graph[v1][v2]=1;
-				graph[v2][v1]=1;
-			}
+			long k = in.nextLong();
 			Solution s=new Solution();
-			s.solution(graph);
+			s.solution(k);
 		//}
 		out.flush();
 		in.close();
@@ -30,41 +22,61 @@ public class Main {
 }
  
 class Solution{
-	long dp[][];
-	int graph[][];
-	public void solution(int graph[][]){
-		this.graph=graph;
-		int n=graph.length;
-		dp=new long[n][1<<n];//[curentNode,path]
-		long res=0;
-		
-		for(int i=0;i<n;i++){ 
-			
-			for(int j=0;j<dp.length;j++)Arrays.fill(dp[j],-1);// reset dp
-			long val=dfs(i,i,1<<i);
-			res+=val;
+	
+	public void solution(long k){
+		if(k==1){
+			System.out.println("codeforces");
+			return;
 		}
-		System.out.println(res/2);
+		String s="codeforces";
+		int len=10;//fixed
+		int dp[]=new int[10];
+		Arrays.fill(dp,1);
+		StringBuilder str=new StringBuilder();
+		while(true){
+			boolean found=false;
+			for(int i=0;i<10;i++){
+				dp[i]++;
+				if(cal(dp)>=k){
+					found=true;
+					break;
+				}
+			}
+			if(found)break;
+		}
+		System.out.println(cal(dp));
+		for(int i=0;i<dp.length;i++){
+			int T=dp[i];
+			for(int t=0;t<T;t++){
+				str.append(s.charAt(i));
+			}
+		}
+		System.out.println(str.toString());
 	}
 	
-	public long dfs(int root,int cur,int path){
-		
-		if(dp[cur][path]!=-1)return dp[cur][path];
-		long res=0;
-		for(int i=root;i<graph.length;i++){ //remove duplicate, dont meet with those smaller childs
-			if(graph[cur][i]!=1)continue;
-			if(i==root&&Integer.bitCount(path)>=2)res++;//cycle detect
-			if((path&(1<<i))!=0)continue;
-			res+=dfs(root,i,path|(1<<cur));
-		}
-		dp[cur][path]=res;
-		return res;
+	public long cal(int A[]){
+		long pro=1;
+		for(int i:A)pro*=i;
+		return pro;
 	}
+	
+	
+	
+	
 	
 	
 	
 	
 	//helper function I would use
+	public boolean isP(String s){
+		int l=0,r=s.length()-1;
+		while(l<r){
+			if(s.charAt(l)!=s.charAt(r))return false;
+			l++;r--;
+		}
+		return true;
+	}
+	
 	public int find(int nums[],int x){//union find => find method
 		if(nums[x]==x)return x;
 		int root=find(nums,nums[x]);
