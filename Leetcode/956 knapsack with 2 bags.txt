@@ -1,0 +1,32 @@
+class Solution {
+    public int tallestBillboard(int[] A) {
+        if(A.length==0)return 0;
+        int sum=0,n=A.length;
+        for(int i:A)sum+=i;
+        Map<Integer,Integer>cur=new HashMap<>();
+        cur.put(0,0);
+        for(int i=0;i<A.length;i++){
+            int val=A[i];
+            Map<Integer,Integer>map=new HashMap<>();
+            for(Integer dif:cur.keySet()){
+                //map.put(dif,cur.get(dif));
+                
+                int dif1=dif+val;
+                int dif2=dif-val;
+                if(!map.containsKey(dif1))map.put(dif1,0);
+                if(!map.containsKey(dif2))map.put(dif2,0);
+                
+                map.put(dif1,Math.max(map.get(dif1),val+cur.get(dif)));
+                map.put(dif2,Math.max(map.get(dif2),val+cur.get(dif)));
+            }
+            for(Integer dif:cur.keySet()){
+                if(!map.containsKey(dif))map.put(dif,0);
+                map.put(dif,Math.max(cur.get(dif),map.get(dif)));
+            }
+            cur=map;
+            
+        }
+       
+        return cur.get(0)/2;
+    }
+}
