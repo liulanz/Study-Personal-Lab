@@ -8,17 +8,15 @@ public class Main {
 	public static void main (String[] args) throws java.lang.Exception {
 	    Scanner in = new Scanner(System.in);
 		//InputReader in = new InputReader(System.in);
-		int T =in.nextInt();
+		//int T =in.nextInt();
 		PrintWriter out = new PrintWriter(System.out);
-		for(int t=0;t<T;t++){
+		//for(int t=0;t<T;t++){
 			int n=in.nextInt();
-			int x=in.nextInt();
-			int A[]=new int[n];
-			for(int i=0;i<n;i++)A[i]=in.nextInt();
-			
+			long A[]=new long[n];
+			for(int i=0;i<n;i++)A[i]=in.nextLong();			
 			Solution s=new Solution();
-			s.solution(A,x);
-		}
+			s.solution(A);
+		//}
 		out.flush();
 		in.close();
 	}
@@ -27,17 +25,25 @@ public class Main {
  
 class Solution{
 	
-	public void solution(int A[],int x){
-		// A[] :skill
-		// minimum at team * number >=x, how many team?
-		Arrays.sort(A);
-		int res=0;
-		PriorityQueue<Integer>pq=new PriorityQueue<>();
-		for(int i=A.length-1;i>=0;i--){
-			pq.add(A[i]);
-			if(pq.size()*pq.peek()>=x){
-				res++;
-				pq=new PriorityQueue<>();
+	public void solution(long A[]){
+		//k element subsequence
+		//least max(1,k-2) bit be set, for those bit, sumation(2^i)
+		//find the max val for the subsequence
+	if(A.length==1){
+		System.out.println(A[0]);
+		return;
+	} 
+	if(A.length==2){
+		System.out.println(A[0]|A[1]);
+		return;
+	}
+	
+		long res=0;
+		for(int i=0;i<A.length;i++){
+			for(int j=i+1;j<A.length;j++){
+				for(int k=j+1;k<A.length;k++){
+					res=Math.max(res,(A[i]|A[j]|A[k]));
+				}
 			}
 		}
 		System.out.println(res);
