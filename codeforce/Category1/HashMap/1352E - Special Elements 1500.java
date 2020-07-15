@@ -8,15 +8,15 @@ public class Main {
 	public static void main (String[] args) throws java.lang.Exception {
 	    Scanner in = new Scanner(System.in);
 		//InputReader in = new InputReader(System.in);
-		//int T =in.nextInt();
+		int T =in.nextInt();
 		PrintWriter out = new PrintWriter(System.out);
-		//for(int t=0;t<T;t++){
+		for(int t=0;t<T;t++){
 			int n=in.nextInt();
-			long A[]=new long[n];
-			for(int i=0;i<n;i++)A[i]=in.nextLong();			
+			int A[]=new int[n];
+			for(int i=0;i<n;i++)A[i]=in.nextInt();			
 			Solution s=new Solution();
-			s.solution(A);
-		//}
+			s.solution(A,out);
+		}
 		out.flush();
 		in.close();
 	}
@@ -25,29 +25,26 @@ public class Main {
  
 class Solution{
 	
-	public void solution(long A[]){
-		//k element subsequence
-		//least max(1,k-2) bit be set, for those bit, sumation(2^i)
-		//find the max val for the subsequence
-	if(A.length==1){
-		System.out.println(A[0]);
-		return;
-	} 
-	if(A.length==2){
-		System.out.println(A[0]|A[1]);
-		return;
-	}
-	
-		long res=0;
+	public void solution(int A[],PrintWriter out){
+		int res=0;
+		int has[]=new int[8001];
+		boolean visit[]=new boolean[8001];
+		for(int i:A)has[i]++;
+		
 		for(int i=0;i<A.length;i++){
-			for(int j=i+1;j<A.length;j++){
-				for(int k=j+1;k<A.length;k++){
-					res=Math.max(res,(A[i]|A[j]|A[k]));
-				}
+			int sum=0;
+			for(int j=i;j<A.length;j++){
+				sum+=A[j];
+				if(j-i+1<2)continue;
+				if(sum>8000)break;
+				visit[sum]=true;
 			}
 		}
-		System.out.println(res);
-		
+		for(int i=1;i<visit.length;i++){
+			if(visit[i])res+=has[i];
+		}
+		out.println(res);
+	
 	}
 	
  
