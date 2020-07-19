@@ -1,0 +1,46 @@
+class Solution {
+    public int closestToTarget(int[] A, int target) {
+        int res=Integer.MAX_VALUE;
+        int allset=0;
+        for(int i=0;i<21;i++){
+            allset|=(1<<i);
+        }
+        
+        int sparse[][]=new int[A.length][21];
+        for(int i=0;i<A.length;i++){
+            sparse[i][0]=A[i];
+        }
+        
+        for(int i=1;i<sparse[0].length;i++){
+            for(int j=0;j<sparse.length;j++){
+                if(j+(1<<(i-1))>=A.length)sparse[j][i]=sparse[j][i-1]&allset;
+                else sparse[j][i]=sparse[j][i-1]&sparse[j+(1<<(i-1))][i-1];
+                
+            }
+        }
+        
+        for(int i=0;i<A.length;i++){
+            int l=i+1,r=A.length-1;
+            res=Math.min(res,Math.abs(target-A[i]));
+            while(l<=r){
+                int val=A[i];
+                int mid=l+(r-l)/2; // [i,mid]
+                int len=mid-i+1;
+                int start=i;
+                for(int j=21;j>=0;j--){
+                    if((len&(1<<j))!=0){
+                        val=val&(sparse[start][j]);
+                        start+=(1<<(j));
+                    }
+                }
+                res=Math.min(res,Math.abs(target-val));
+                if(val>=target){
+                    l=mid+1;
+                }else{
+                    r=mid-1;
+                }
+            }
+        }
+        return res;
+    }
+}
