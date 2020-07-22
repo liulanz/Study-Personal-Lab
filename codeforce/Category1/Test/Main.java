@@ -12,25 +12,12 @@ public class Main {
 		PrintWriter out = new PrintWriter(System.out);
 		for(int t=0;t<T;t++){
 			int n=in.nextInt();
-			int m=in.nextInt();
-			List<Integer>undirect[]=new ArrayList[n];
-			List<Integer>direct[]=new ArrayList[n];
-			for(int i=0;i<n;i++){
-				direct[i]=new ArrayList<>();
-				undirect[i]=new ArrayList<>();
-			}
-			for(int i=0;i<m;i++){
-				int flag=in.nextInt();
-				int v1=in.nextInt()-1;int v2=in.nextInt()-1;
-				if(flag==0){
-					undirect[v1].add(v2);
-				}else{
-					direct[v1].add(v2);
-				}
-			}
+			int k=in.nextInt();
+			int A[]=new int[n];
+			for(int i=0;i<n;i++)A[i]=in.nextInt();
 					
 			Solution s=new Solution();
-			s.solution(n,undirect,direct);
+			s.solution(A,k+1);
 		}
 		out.flush();
 		in.close();
@@ -39,74 +26,38 @@ public class Main {
 }
  
 class Solution{
-	List<Integer>undirect[];
-	List<Integer>direct[];
-	Set<Integer>set=new HashSet<>();
-	boolean cycle=false;
-	LinkedList<Integer>order=new LinkedList<>();
-	public void solution(int n,List<Integer>undirect[],List<Integer>direct[]){
-		this.undirect=undirect;
-		this.direct=direct;
-
-		
-		for(int i=0;i<n;i++){
-			if(set.contains(i))continue;
-			set.add(i);
-			Set<Integer>stack=new HashSet<>();
-			dfs(i,new HashSet<>());
-			if(cycle){
-				msg("NO");
-				return;
-			}
-		}
-		
-		msg("YES");
-		//output direct
-		for(int i=0;i<direct.length;i++){
-			List<Integer>childs=direct[i];
-			for(int c:childs){
-				msg((i+1)+" "+(c+1));
-			}
-		}
-		
-		int priority=0;
-		int rank[]=new int[n];
-		while(order.size()!=0){
-			int node=order.removeFirst();
-			rank[node]=priority++;
-		}
-		
-		//output undirect
-		for(int i=0;i<undirect.length;i++){
-			List<Integer>childs=undirect[i];
-			for(int c:childs){
-				if(rank[i]<=rank[c]){
-					msg((i+1)+" "+(c+1));
-				}else{
-					msg((c+1)+" "+(i+1));
-				}
-			}
-		}
-		
-	}
+	//constant variable
+	final int MAX=Integer.MAX_VALUE;
+	final int MIN=Integer.MIN_VALUE;
+	//////////////////////////////
 	
-	public void dfs(int root,Set<Integer>stack){
-		//msg((root+1)+"");
-		//System.out.println(stack);
-		stack.add(root);
-		List<Integer>childs=direct[root];
-		for(int c:childs){
-			if(stack.contains(c)){
-				cycle=true;
-				return;
-			}
-			if(set.contains(c))continue;
-			set.add(c);
-			dfs(c,stack);
+	
+	//global variable
+	
+	public void solution(int A[],int k){
+		if(k==0){
+			System.out.println(A[0]);
+			return;
 		}
-		order.addFirst(root);
-		stack.remove(root);
+		
+		int dis=MAX;
+		int res=-1;
+		for(int i=0;i<A.length;i++){
+			if(i+1<k)continue;
+			int r=A[i];
+			int l=A[i-k+1];
+			
+			int mid=l+(r-l)/2;
+			
+			int M=Math.max(mid-l,r-mid);
+			if(dis>M){
+				dis=M;
+				res=mid;
+			}
+		}
+		System.out.println(res);
 	}
+
 	
 
 	
