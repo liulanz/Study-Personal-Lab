@@ -11,18 +11,10 @@ public class Main {
 		//int T =in.nextInt();
 		PrintWriter out = new PrintWriter(System.out);
 		//for(int t=0;t<T;t++){
-			int n=in.nextInt();
-			int m=in.nextInt();
-			int A[]=new int[n];
-
-			for(int i=0;i<n;i++){
-				A[i]=in.nextInt();
-			}
+			String ss=in.next();
 			
-			//for(int i=0;i<n;i++)A[i]=in.nextInt();
-			//for(int i=0;i<n;i++)B[i]=in.nextInt();
 			Solution s=new Solution();
-			s.solution(A,m);
+			s.solution(ss);
 		//}
 		out.flush();
 		in.close();
@@ -39,63 +31,37 @@ class Solution{
 	
 	//global variable
 
-	public void solution(int A[],int m){
-		if(check(A)){
-			msg("0");
-			return;
+	public void solution(String s){
+		long res=0;
+		for(int i=0;i<s.length();i++){
+			int l=i,r=Math.min(s.length()-1,i+8);
+			int R=r;
+			int remain = (s.length()-1-r);
+			int cnt=0;
+			while(r!=l){
+				boolean found=false;
+				for(int gap=1;gap<=9;gap++){
+					int s1=l;
+					int s2=l+gap;
+					int s3=l+gap*2;
+					if(s3>r)break;
+					if(s.charAt(s1)==s.charAt(s2)&&s.charAt(s1)==s.charAt(s3)){
+						found=true;
+					}
+				}
+				if(found)cnt++;
+				r--;
+			}
+			res+=(remain+cnt);
+			
 		}
 		
-		int l=1,r=m;
-		int res=-1;
-		while(l<=r){
-			int mid=l+(r-l)/2;
-			if(make(A,mid,m)){
-				res=mid;
-				r=mid-1;
-			}else{
-				l=mid+1;
-			}
-		}
 		msg(res+"");
 		
 	}
 	
-	public boolean make(int A[],int k,int m){
-		int copy[]=new int[A.length];
-		for(int i=0;i<A.length;i++){
-			copy[i]=A[i];
-		}
-		
-		if(copy[0]+k>=m){
-			copy[0]=0;
-		}
-		for(int i=1;i<copy.length;i++){
-			int pre=copy[i-1];
-			if(copy[i]==pre)continue;
-			//2 options, not change, change
-			if(copy[i]>pre){
-				int goal=pre+m;
-				if(k+copy[i]>=goal){
-					copy[i]=pre;
-				}
-			}else{
-				if(copy[i]+k>=pre){
-					copy[i]=pre;
-				}else{
-					return false;
-				}
-			}
-			
-		}
-		return true;
-	}
 	
-	public boolean check(int A[]){
-		for(int i=1;i<A.length;i++){
-			if(A[i]<A[i-1])return false;
-		}
-		return true;
-	}
+	
 	
 
 	
