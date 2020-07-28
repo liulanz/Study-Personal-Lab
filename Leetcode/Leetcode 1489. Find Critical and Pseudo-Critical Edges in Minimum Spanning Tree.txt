@@ -1,0 +1,114 @@
+class Solution {
+    int graph[][];
+    int nums[];
+    int originCost=0;
+    List<List<Integer>>res=new ArrayList<>();
+    Map<String,Integer>map=new HashMap<>();
+    List<Integer>l1=new ArrayList<>();
+    List<Integer>l2=new ArrayList<>();
+    public List<List<Integer>> findCriticalAndPseudoCriticalEdges(int n, int[][] edges) {
+        //record index
+        nums=new int[n];
+        for(int i=0;i<edges.length;i++){
+            map.put(edges[i][0]+","+edges[i][1]+","+edges[i][2],i);
+        }
+        
+        reset(nums);
+        Arrays.sort(edges,(a,b)->{
+            return a[2]-b[2];
+        });
+        //find min spanning tree cost
+        originCost=cost(edges,nums,-1);
+        
+        //critical edge, if remove, increas the weight of MST
+        for(int i=0;i<edges.length;i++){
+            reset(nums);
+            int newcost=cost(edges,nums,i);
+            if(newcost>originCost){
+                l1.add(map.get(edges[i][0]+","+edges[i][1]+","+edges[i][2]));
+            }
+            else{
+                if(!check(edges,nums,i)){
+                    l1.add(map.get(edges[i][0]+","+edges[i][1]+","+edges[i][2]));
+                }
+                
+            }
+        }
+        
+        //A pseudo-critical edge, on the other hand, 
+        //is that which can appear in some MSTs but not all.
+        
+         for(int i=0;i<edges.length;i++){
+            reset(nums);
+            int newcost=cost(edges,nums,i);
+            if(newcost==originCost&&inspan(edges,nums,i,originCost)){
+                l2.add(map.get(edges[i][0]+","+edges[i][1]+","+edges[i][2]));
+            }
+        }
+       
+        
+        
+        res.add(l1);
+        res.add(l2);
+        return res;
+    }
+    
+    public boolean check(int[][] edges,int nums[],int avoid){
+        Set<Integer>set=new HashSet<>();
+        for(int i=0;i<edges.length;i++){
+            set.add(find(nums,edges[i][0]));
+            set.add(find(nums,edges[i][1]));
+        }
+        return set.size()==1;
+    }
+    
+     public boolean inspan(int[][] edges,int nums[],int include,int originCost){
+        reset(nums);
+        int total=0;
+        
+        int r1=find(nums,edges[include][0]);    
+        int r2=find(nums,edges[include][1]);  
+        nums[r1]=r2;
+        total+=edges[include][2];
+         
+        for(int i=0;i<edges.length;i++){
+            if(i==include)continue;
+            int v1=edges[i][0],v2=edges[i][1];
+            r1=find(nums,v1);
+            r2=find(nums,v2);
+            if(r1!=r2){
+                total+=edges[i][2];
+                nums[r1]=r2;
+            }
+        }
+        return total==originCost;
+    }
+    
+    public int cost(int[][] edges,int nums[],int avoid){
+        int total=0;
+        for(int i=0;i<edges.length;i++){
+            if(i==avoid)continue;
+            int v1=edges[i][0],v2=edges[i][1];
+            int r1=find(nums,v1);
+            int r2=find(nums,v2);
+            if(r1!=r2){
+                total+=edges[i][2];
+                nums[r1]=r2;
+            }
+        }
+        return total;
+    }
+    
+    public int find(int nums[],int x){
+        if(nums[x]==x)return x;
+        int root=find(nums,nums[x]);
+        nums[x]=root;
+        return root;
+    }
+    
+     public void reset(int nums[]){
+        for(int i=0;i<nums.length;i++){
+            nums[i]=i;
+        }
+    }
+}
