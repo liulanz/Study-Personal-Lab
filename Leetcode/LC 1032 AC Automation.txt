@@ -1,0 +1,81 @@
+class StreamChecker {
+    Node root;
+    Node cur=root;
+    public StreamChecker(String[] words) {
+        root=new Node();
+        for(String w:words){
+            insert(root,w);
+        }
+        cur=root;
+        //build AC
+        //root.fail=root;
+        Queue<Node>q=new LinkedList<>();
+        q.add(root);
+        while(q.size()!=0){
+            Node p=q.poll();
+            for(int i=0;i<26;i++){
+                if(p.childs[i]!=null){
+                    Node next=p.childs[i];
+                    if(p==root){
+                        next.fail=root;
+                    }else{
+                        Node temp=p.fail;
+                        while(temp!=null){
+                            if(temp.childs[i]!=null){
+                                next.fail=temp.childs[i];
+                                break;
+                            }
+                            temp=temp.fail;
+                        }
+                        if(temp==null)next.fail=root;
+                    }
+                    q.add(next);
+                }
+            }
+        }
+    }
+    
+    public boolean query(char letter) {
+        int index=letter-'a';
+        boolean res=false;
+        
+        while(cur.childs[index]==null&&cur!=root)cur=cur.fail;
+        
+        cur=cur.childs[index];
+        if(cur==null)cur=root;
+       
+        Node temp=cur;
+        while(temp!=root){
+            if(temp.is==true)res=true;
+            temp=temp.fail;
+        }
+        
+        return res;
+    }
+    
+    public void insert(Node r,String w){
+        for(int i=0;i<w.length();i++){
+            int index=w.charAt(i)-'a';
+            if(r.childs[index]==null)r.childs[index]=new Node();
+            r=r.childs[index];
+        }
+        r.is=true;
+        r.len=w.length();
+    }
+    
+    class Node{
+        Node childs[];
+        Node fail=null;
+        boolean is=false;
+        int len=0;
+        public Node(){
+            childs=new Node[26];
+        }
+    }
+}
+
+/**
+ * Your StreamChecker object will be instantiated and called as such:
+ * StreamChecker obj = new StreamChecker(words);
+ * boolean param_1 = obj.query(letter);
+ */
