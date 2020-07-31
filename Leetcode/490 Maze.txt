@@ -1,0 +1,107 @@
+由空地和墙组成的迷宫中有一个球。球可以向上下左右四个方向滚动，但在遇到墙壁前不会停止滚动。当球停下时，可以选择下一个方向。
+
+给定球的起始位置，目的地和迷宫，判断球能否在目的地停下。
+
+迷宫由一个0和1的二维数组表示。 1表示墙壁，0表示空地。你可以假定迷宫的边缘都是墙壁。起始位置和目的地的坐标通过行号和列号给出。
+
+来源：力扣（LeetCode）
+链接：https://leetcode-cn.com/problems/the-maze
+著作权归领扣网络所有。商业转载请联系官方授权，非商业转载请注明出处。
+
+
+
+class Solution {
+    boolean visit[][][];
+    Queue<int[]>q;
+    int grid[][];
+    public boolean hasPath(int[][] grid, int[] start, int[] end) {
+        //1 : block
+        //0 : move
+        this.grid=grid;
+        visit=new boolean[grid.length][grid[0].length][4];
+        visit[start[0]][start[1]][0]=true;
+        visit[start[0]][start[1]][1]=true;
+        visit[start[0]][start[1]][2]=true;
+        visit[start[0]][start[1]][3]=true;
+        
+        q=new LinkedList<>();
+        q.add(new int[]{start[0],start[1],0});
+        q.add(new int[]{start[0],start[1],1});
+        q.add(new int[]{start[0],start[1],2});
+        q.add(new int[]{start[0],start[1],3});
+        while(q.size()!=0){
+            int A[]=q.poll();
+            int r=A[0],c=A[1];
+            int dir=A[2];
+            if(dir==0){
+                if(stop(grid,r+1,c)){
+                    if(r==end[0]&&c==end[1]){
+                         //System.out.println(0);
+                        return true;
+                    }
+                    add(r+1,c,0);
+                    add(r-1,c,1);
+                    add(r,c+1,2);
+                    add(r,c-1,3);
+                }else{
+                    add(r+1,c,dir);
+                }
+            }
+            else if(dir==1){
+                if(stop(grid,r-1,c)){
+                    if(r==end[0]&&c==end[1]){
+                        return true;
+                    }
+                    add(r+1,c,0);
+                    add(r-1,c,1);
+                    add(r,c+1,2);
+                    add(r,c-1,3);
+                }else{
+                    add(r-1,c,dir);
+                }
+            }
+            else if(dir==2){
+                if(stop(grid,r,c+1)){
+                    if(r==end[0]&&c==end[1]){
+                        return true;
+                    }
+                    add(r+1,c,0);
+                    add(r-1,c,1);
+                    add(r,c+1,2);
+                    add(r,c-1,3);
+                }else{
+                    add(r,c+1,dir);
+                }
+            }else{
+                if(stop(grid,r,c-1)){
+                    if(r==end[0]&&c==end[1]){
+                        return true;
+                    }
+                    add(r+1,c,0);
+                    add(r-1,c,1);
+                    add(r,c+1,2);
+                    add(r,c-1,3);
+                }else{
+                    add(r,c-1,dir);
+                }
+            }
+        }
+        return false;
+    }
+
+    public void add(int r,int c,int dir){
+        if(r<0||r>=grid.length||c<0||c>=grid[0].length)return;
+        if(visit[r][c][dir])return;
+        if(grid[r][c]==1)return;
+        visit[r][c][dir]=true;
+        q.add(new int[]{r,c,dir});
+    }
+
+    public boolean stop(int grid[][],int r,int c){
+        if(r<0||r>=grid.length||c<0||c>=grid[0].length)return true;
+        if(grid[r][c]==1)return true;
+        return false;
+    }
+
+    
+}
